@@ -41,13 +41,18 @@ class BeansMapboxjs extends BeanPlugin {
   public function view($bean, $content, $view_mode = 'default', $langcode = NULL) {
     drupal_add_js(drupal_get_path('module', 'bean_mapboxjs') . '/js/bean_mapboxjs.drupal.js');
     $map_id = 'bean-' . $bean->delta;
+    $tileset_items = field_get_items('bean', $bean, 'field_mapbox_tileset_url');
+    $tilesets = array();
+    foreach($tileset_items as $item) {
+      $tilesets[]['url'] = $item['url'];
+    }
     $settings = array(
     'mapID' => $map_id,
     'configuration' => array(
-      'tileset1' => 'examples.map-vyofok3q',
+      'tileset1' => $tilesets['0']['url'],
     ));
     drupal_add_js(array('bean_mapboxjs' => $settings), 'setting');
-    $content['bean_mapboxjs']['#markup'] = mapboxjs_render_map($map_id, $bean->height . 'px');
+    $content['bean'][$bean->bid]['bean_mapboxjs']['#markup'] = mapboxjs_render_map($map_id, $bean->height . 'px');
     return $content;
   }
 }
