@@ -1,0 +1,8 @@
+name = Bean: MapBox map
+description = Bean plugin for displaying MapBox maps
+core = 7.x
+
+files[] = "plugins/bean/bean_mapboxjs.inc"
+
+dependencies[] = bean
+dependencies[] = mapboxjs
