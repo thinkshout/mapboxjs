@@ -12,7 +12,7 @@
         }
 
         // Load a simple map example.
-        mapbox.auto(this.mapID, settings.tileset1);
+        mapbox.auto(this.mapID, settings.tilesets['0']['url']);
 
       });
 

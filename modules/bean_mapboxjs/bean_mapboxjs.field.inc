@@ -44,7 +44,7 @@ $fields = array();
       'bundle' => 'bean_mapboxjs',
       'default_value' => NULL,
       'deleted' => '0',
-      'description' => 'Please enter the full URL of a <a href="http://mapbox.com">MapBox</a> tileset to be added to this map. The "title" you enter for this URL will be used in the map\'s tile switcher.',
+      'description' => 'Please enter the full URL of a <a href="http://mapbox.com">MapBox</a> tileset to be added to this map. This URL should be in the TileJSON file format, like http://a.tiles.mapbox.com/v3/tmcw.map-hehqnmda.jsonp. The "title" you enter for this URL will be used in the map\'s tile switcher.',
       'display' => array(
         'default' => array(
           'label' => 'hidden',

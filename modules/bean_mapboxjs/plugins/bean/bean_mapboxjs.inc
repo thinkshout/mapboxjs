@@ -43,13 +43,15 @@ class BeansMapboxjs extends BeanPlugin {
     $map_id = 'bean-' . $bean->delta;
     $tileset_items = field_get_items('bean', $bean, 'field_mapbox_tileset_url');
     $tilesets = array();
+    dpm($tileset_items);
     foreach($tileset_items as $item) {
-      $tilesets[]['url'] = $item['url'];
+      $tilesets[] = array('title' => $item['title'], 'url' => $item['url']);
     }
+    dpm($tilesets);
     $settings = array(
     'mapID' => $map_id,
     'configuration' => array(
-      'tileset1' => $tilesets['0']['url'],
+      'tilesets' => $tilesets,
     ));
     drupal_add_js(array('bean_mapboxjs' => $settings), 'setting');
     $content['bean'][$bean->bid]['bean_mapboxjs']['#markup'] = mapboxjs_render_map($map_id, $bean->height . 'px');
