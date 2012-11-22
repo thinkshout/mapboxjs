@@ -1,6 +1,42 @@
 <?php
 
 /**
+ * Implements hook_requirements().
+ */
+function mapboxjs_requirements($phase) {
+  $requirements = array();
+
+  // ensure js library is available
+  if ($phase == 'runtime' && !file_exists(libraries_get_path('mapboxjs') . '/mapbox.js')) {
+    $requirements['mapboxjss'] = array(
+      'title' => t('MapBox.js library not found'),
+      'value' => t('The !mapboxjs javascript library was not found. Please !download it into the mapbox subdirectory of the libraries folder.',
+        array(
+          '!mapboxjs' => l('MapBox.js', 'http://mapbox.com/mapbox.js'),
+          '!download' => l('download', 'http://api.tiles.mapbox.com/mapbox.js/v0.6.6/mapbox.js'),
+        )
+      ),
+      'severity' => REQUIREMENT_ERROR,
+    );
+  }
+    // ensure MapBox css file is available
+  if ($phase == 'runtime' && !file_exists(libraries_get_path('mapboxjs') . '/mapbox.css')) {
+    $requirements['mapboxjs'] = array(
+      'title' => t('MapBox css not found'),
+      'value' => t('The !mapboxjs css file was not found. Please !download it into the mapbox subdirectory of the libraries folder.',
+        array(
+          '!mapboxjs' => l('MapBox.js', 'http://mapbox.com/mapbox.js'),
+          '!download' => l('download', 'http://api.tiles.mapbox.com/mapbox.js/v0.6.6/mapbox.css'),
+        )
+      ),
+      'severity' => REQUIREMENT_ERROR,
+    );
+  }
+
+  return $requirements;
+}
+
+/**
  * Implements hook_library().
  */
 function mapboxjs_library() {
