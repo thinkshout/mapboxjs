@@ -6,3 +6,4 @@ files[] = "plugins/bean/bean_mapboxjs.inc"
 
 dependencies[] = bean
 dependencies[] = mapboxjs
+dependencies[] = link
