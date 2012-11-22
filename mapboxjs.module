@@ -9,12 +9,12 @@ function mapboxjs_library() {
     'website' => 'http://mapbox.com/mapbox.js',
     'version' => '0.6.6',
     'js' => array(
-      drupal_get_path('module', 'mapboxjs') . '/js/mapbox.js' => array(
+      libraries_get_path('mapboxjs') . '/mapbox.js' => array(
         'type' => 'file',
       ),
     ),
     'css' => array(
-      drupal_get_path('module', 'mapboxjs') . '/css/mapbox.css' => array(
+      libraries_get_path('mapboxjs') . '/mapbox.css' => array(
         'type' => 'file',
         'media' => 'screen',
         'group' => CSS_DEFAULT,
