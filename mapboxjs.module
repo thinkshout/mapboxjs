@@ -1,6 +1,30 @@
 <?php
 
 /**
+ * Implements hook_library().
+ */
+function mapboxjs_library() {
+  $libraries['mapboxjs'] = array(
+    'title' => 'MapBox.js',
+    'website' => 'http://mapbox.com/mapbox.js',
+    'version' => '0.6.6',
+    'js' => array(
+      drupal_get_path('module', 'mapboxjs') . '/js/mapbox.js' => array(
+        'type' => 'file',
+      ),
+    ),
+    'css' => array(
+      drupal_get_path('module', 'mapboxjs') . '/css/mapbox.css' => array(
+        'type' => 'file',
+        'media' => 'screen',
+        'group' => CSS_DEFAULT,
+      ),
+    ),
+  );
+  return $libraries;
+}
+
+/**
  * Implements hook_theme().
  */
 function mapboxjs_theme($existing, $type, $theme, $path) {
@@ -15,14 +39,13 @@ function mapboxjs_theme($existing, $type, $theme, $path) {
 /**
  * Load all MapBox.js required client files and return markup for a map.
  *
+ * @param string $map_id
  * @param string $height
  *
  * @return string map markup
  */
 function mapboxjs_render_map($map_id = 'mapboxjs-map', $height = '400px') {
   // Add javascript and css dependencies.
-  drupal_add_js(drupal_get_path('module', 'mapboxjs') . '/js/mapbox.js');
-  drupal_add_css(drupal_get_path('module', 'mapboxjs') . '/css/mapbox.css', array('group' => CSS_DEFAULT));
-
+  drupal_add_library('mapboxjs', 'mapboxjs');
   return theme('mapboxjs_map', array('map_id' => $map_id, 'height' => $height));
 }
