@@ -43,11 +43,9 @@ class BeansMapboxjs extends BeanPlugin {
     $map_id = 'bean-' . $bean->delta;
     $tileset_items = field_get_items('bean', $bean, 'field_mapbox_tileset_url');
     $tilesets = array();
-    dpm($tileset_items);
     foreach($tileset_items as $item) {
       $tilesets[] = array('title' => $item['title'], 'url' => $item['url']);
     }
-    dpm($tilesets);
     $settings = array(
     'mapID' => $map_id,
     'configuration' => array(
