@@ -7,3 +7,10 @@ files[] = "plugins/bean/bean_mapboxjs.inc"
 dependencies[] = bean
 dependencies[] = mapboxjs
 dependencies[] = link
+
+
+; Information added by drush on 2012-11-23
+version = "unknown"
+project = "mapboxjs"
+datestamp = "1353698579"
+
