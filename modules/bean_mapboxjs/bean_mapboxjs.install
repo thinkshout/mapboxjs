@@ -5,7 +5,7 @@
  */
 function bean_mapboxjs_install() {
 
-  // Add our link field instance.
+  // Add our locked link field instance.
   $field_config = array(
     'translatable' => '0',
     'entity_types' => array(),
