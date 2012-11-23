@@ -13,8 +13,12 @@
 
         // Load a map with the right ID and add some controls.
         var map = mapbox.map(this.mapID);
-        map.ui.zoomer.add();
-        map.ui.fullscreen.add();
+        if (settings.zoomer == 1) {
+          map.ui.zoomer.add();
+        }
+        if (settings.fullscreen == 1) {
+          map.ui.fullscreen.add();
+        }
 
         // Now start adding our layers.
         for (var i = 0; i < settings.tilesets.length; i++) {

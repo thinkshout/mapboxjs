@@ -11,6 +11,8 @@ class BeansMapboxjs extends BeanPlugin {
   public function values() {
     return array(
       'height' => '500',
+      'zoomer' => TRUE,
+      'fullscreen' => FALSE,
     );
   }
 
@@ -22,7 +24,9 @@ class BeansMapboxjs extends BeanPlugin {
 
     $form['settings'] = array(
       '#type' => 'fieldset',
-      '#title' => t('Options'),
+      '#title' => t('Mapbox Map Options'),
+      '#collapsible' => TRUE,
+      '#collapsed' => TRUE,
     );
 
     // Provide bean administrator with control over the map container height.
@@ -32,6 +36,18 @@ class BeansMapboxjs extends BeanPlugin {
       '#description' => t('Enter the height in pixels for this map.'),
       '#default_value' => isset($bean->height) ? $bean->height : '500',
       '#element_validate' => array('element_validate_integer_positive'),
+    );
+    // Enable/disable zoom controls.
+    $form['settings']['zoomer'] = array(
+      '#type' => 'checkbox',
+      '#title' => t('Provide zoom controls'),
+      '#default_value' => isset($bean->zoomer) ? $bean->zoomer : TRUE,
+    );
+    // Enable/disable fullscreen control.
+    $form['settings']['fullscreen'] = array(
+      '#type' => 'checkbox',
+      '#title' => t('Provide fullscreen map option'),
+      '#default_value' => isset($bean->fullscreen) ? $bean->fullscreen : FALSE,
     );
     return $form;
   }
@@ -54,6 +70,8 @@ class BeansMapboxjs extends BeanPlugin {
     $settings = array(
     'mapID' => $map_id,
     'configuration' => array(
+      'zoomer' => $bean->zoomer,
+      'fullscreen' => $bean->fullscreen,
       'tilesets' => $tilesets,
     ));
     // Pass our settings to Drupal's global js variable.
