@@ -1,7 +1,5 @@
 <?php
 
-include_once('bean_mapboxjs.field.inc');
-
 /**
  * Implements hook_bean_types_api_info().
  */
