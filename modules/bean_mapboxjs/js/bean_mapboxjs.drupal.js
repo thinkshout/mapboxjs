@@ -13,6 +13,7 @@
 
         // Load a map with the right ID and add some controls.
         var map = mapbox.map(this.mapID);
+				var layers = document.getElementById('map-ui');
         if (settings.zoomer == 1) {
           map.ui.zoomer.add();
         }
@@ -20,15 +21,45 @@
           map.ui.fullscreen.add();
         }
 
-        // Now start adding our layers.
-        for (var i = 0; i < settings.tilesets.length; i++) {
-          mapbox.load(settings.tilesets[i]['url'], function(data) {
-            map.addLayer(data.layer);
-            // @TODO - Don't center and zoom twice.
-            map.center({ lat: data.center.lat, lon: data.center.lon });
-            map.zoom(data.zoom, true);
-          });
-        }
+        // Now start adding our layers. If "toggleable layers enabled, show in a layer switcher."
+				if (settings.layer_toggle == 1) {
+					for (var i = 0; i < settings.tilesets.length; i++) {
+	          mapbox.load(settings.tilesets[i]['url'], function(data) {
+	            map.addLayer(data.layer);
+	            // @TODO - Don't center and zoom twice.
+	            map.center({ lat: data.center.lat, lon: data.center.lon });
+	            map.zoom(data.zoom, true);
+	          });
+	        }
+					for (var i = 0; i < map.getLayers().length; i++) {
+						var n = map.getLayerAt(i).name;
+					  var item = document.createElement('li');
+					  var layer = document.createElement('a');
+					  	layer.href = '#';
+					    layer.id = n; 
+					    layer.className = 'active'; 
+					    layer.innerHTML = 'Layer ' + (i + 1);
+
+					  layer.onclick = function(e) {
+					     e.preventDefault();
+					     e.stopPropagation();
+					     map.getLayer(this.id).enabled ? map.getLayer(this.id).disable() : map.getLayer(this.id).enable();
+					     this.className = map.getLayer(this.id).enabled ? 'active' : '';
+					   };
+					   item.appendChild(layer);
+					   layers.appendChild(item);
+					 }
+				}
+				else {
+					for (var i = 0; i < settings.tilesets.length; i++) {
+	          mapbox.load(settings.tilesets[i]['url'], function(data) {
+	            map.addLayer(data.layer);
+	            // @TODO - Don't center and zoom twice.
+	            map.center({ lat: data.center.lat, lon: data.center.lon });
+	            map.zoom(data.zoom, true);
+	          });
+	        }
+				}
       })
     }
   }
