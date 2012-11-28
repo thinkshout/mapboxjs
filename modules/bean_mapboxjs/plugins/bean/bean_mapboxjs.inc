@@ -50,7 +50,7 @@ class BeansMapboxjs extends BeanPlugin {
       '#title' => t('Provide fullscreen map option'),
       '#default_value' => isset($bean->fullscreen) ? $bean->fullscreen : FALSE,
     );
-    
+
     // Enable/disable layer toggle control.
     $form['settings']['layer_toggle'] = array(
       '#type' => 'checkbox',
@@ -90,7 +90,7 @@ class BeansMapboxjs extends BeanPlugin {
 
     // Generate our map container and place on the page.
     $content['bean'][$bean->bid]['bean_mapboxjs']['#markup'] = mapboxjs_render_map($map_id, $bean->height . 'px');
-    
+
     // Add additional markup and CSS if layer toggle option selected.
     if ($bean->layer_toggle == TRUE) {
       drupal_add_css(drupal_get_path('module', 'bean_mapboxjs') . '/css/layer_toggle.css');
