@@ -32,6 +32,7 @@
 				function addLayer(num) {
 					layer = mapbox.layer().url(settings.tilesets[num]['url'], function(data) {
 						// If "toggleable layers enabled, show in a layer switcher."
+						// Based on tutorial at http://mapbox.com/mapbox.js/example/layers/
 						if (settings.layer_toggle == 1) {
 							var item = document.createElement('li');
 							var option = document.createElement('a');
