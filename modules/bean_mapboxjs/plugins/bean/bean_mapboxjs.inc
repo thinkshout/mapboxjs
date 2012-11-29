@@ -57,7 +57,7 @@ class BeansMapboxjs extends BeanPlugin {
       '#title' => t('Provide layer toggle controls'),
       '#default_value' => isset($bean->layer_toggle) ? $bean->layer_toggle : FALSE,
       // @TODO - Turn on this feature....But first, fix javascript for managing this feature in bean_mapboxjs.drupal.js.
-      '#access' => FALSE,
+      '#access' => TRUE,
     );
     return $form;
   }
