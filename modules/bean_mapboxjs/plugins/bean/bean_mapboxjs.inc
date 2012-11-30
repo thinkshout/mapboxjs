@@ -50,14 +50,12 @@ class BeansMapboxjs extends BeanPlugin {
       '#title' => t('Provide fullscreen map option'),
       '#default_value' => isset($bean->fullscreen) ? $bean->fullscreen : FALSE,
     );
-
     // Enable/disable layer toggle control.
     $form['settings']['layer_toggle'] = array(
       '#type' => 'checkbox',
       '#title' => t('Provide layer toggle controls'),
+      '#description' => t('Select this option to present a layer switcher to toggle on/off the tileset layers provided above.'),
       '#default_value' => isset($bean->layer_toggle) ? $bean->layer_toggle : FALSE,
-      // @TODO - Turn on this feature....But first, fix javascript for managing this feature in bean_mapboxjs.drupal.js.
-      '#access' => TRUE,
     );
     return $form;
   }
