@@ -11,8 +11,13 @@
 					settings[setting] = this.configuration[setting];
 				}
 
-				// Load a map with the right ID and optionally add some controls.
+				// Load a map with the right ID and optionally add some controls and/or a base tileset.
 				var map = mapbox.map(this.mapID);
+				if (settings.base_layer != '') {
+					base = mapbox.layer().url(settings.base_layer, function(data) {
+						map.addLayer(base);
+					})
+				}
 				if (settings.zoomer == 1) {
 					map.ui.zoomer.add();
 				}
