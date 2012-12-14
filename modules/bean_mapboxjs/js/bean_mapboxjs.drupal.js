@@ -14,10 +14,13 @@
 				// Load a map with the right ID and optionally add some controls and/or a base tileset.
 				var map = mapbox.map(this.mapID);
 				if (settings.base_layer != '') {
-					base = mapbox.layer().url(settings.base_layer, function(data) {
-						map.addLayer(base);
+					mapbox.layer().url(settings.base_layer, function(layer) {
+						map.addLayer(layer);
+
+						// TODO: Load other layers here.
 					})
 				}
+
 				if (settings.zoomer == 1) {
 					map.ui.zoomer.add();
 				}
@@ -29,20 +32,21 @@
 				var options = document.getElementById('map-ui');
 
 				// Start adding our layers.
+				// TODO: Encapsulate all of this code to call from above.
 				for (var i = 0; i < settings.tilesets.length; i++) {
 					addLayer(i);
 				}
 
 				// Helper function for adding layers to map.
 				function addLayer(num) {
-					layer = mapbox.layer().url(settings.tilesets[num]['url'], function(data) {
+					mapbox.layer().url(settings.tilesets[num]['url'], function(layer) {
 						// If "toggleable layers enabled, show in a layer switcher."
 						// Based on tutorial at http://mapbox.com/mapbox.js/example/layers/
 						if (settings.layer_toggle == 1) {
 							var item = document.createElement('li');
 							var option = document.createElement('a');
 								option.href = '#';
-								option.id = data.name;
+								option.id = layer.name;
 								option.className = 'active';
 								option.innerHTML = settings.tilesets[num]['title'];
 							option.onclick = function(e) {
@@ -54,9 +58,11 @@
 							item.appendChild(option);
 							options.appendChild(item);
 						}
+
+						map.addLayer(layer);
 					});
-					map.addLayer(layer);
 				}(i);
+				// TODO: We prob don't need this closure
 
 				// Center on the last loaded layer.
 				// @TODO - Centering and zooming are acting wonky.
@@ -66,6 +72,8 @@
 						lon: data.center.lon
 					});
 					map.zoom(data.zoom, true);
+
+					// TODO: Consider only showing map here.
 				});
 			})
 		}
