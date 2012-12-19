@@ -61,6 +61,83 @@ function mapboxjs_library() {
 }
 
 /**
+ * Implements hook_permission().
+ */
+function mapboxjs_permission() {
+  return array(
+    'administer mapboxjs presets' => array(
+      'title' => t('administer mapboxjs presets'),
+      'description' => t('Administer MapBox.js map presets.'),
+      'restrict access' => TRUE,
+    ),
+  );
+}
+
+/**
+ * Access callback for managing MapBox.js map presets.
+ *
+ * @return bool
+ */
+function mapboxjs_access() {
+  if (user_access('administer mapboxjs presets')) {
+    return TRUE;
+  }
+  return FALSE;
+}
+
+/**
+ * Implements hook_entity_info().
+ */
+function mapboxjs_entity_info() {
+  $return = array(
+    'mapboxjs_preset' => array(
+      'label' => t('MapBox.js Map Preset'),
+      'controller class' => 'EntityAPIControllerExportable',
+      'entity class' => 'MapboxjsPreset',
+      'base table' => 'mapboxjs_preset',
+      'uri callback' => 'entity_class_uri',
+      'fieldable' => TRUE,
+      'exportable' => TRUE,
+      'module' => 'mapboxjs',
+      'entity keys' => array(
+        'id' => 'mapboxjs_preset_id',
+        'name' => 'name',
+        'label' => 'label'
+      ),
+      'bundle keys' => array(
+        'bundle' => 'type',
+      ),
+      'bundles' => array(
+        'mapboxjs_preset' => array(
+          'label' => 'Mapbox.js preset',
+        ),
+      ),
+      // Enable the entity API's admin UI.
+      'admin ui' => array(
+        'path' => 'admin/structure/mapboxjs/presets',
+        'file' => 'mapboxjs.admin.inc',
+        'file path' => drupal_get_path('module', 'mapboxjs') . '/includes',
+      ),
+      'access callback' => 'mapboxjs_access',
+    ),
+  );
+
+  return $return;
+}
+
+/**
+ * Loads a single mapboxjs_preset or all of them if no name provided.
+ *
+ * @param null $name
+ *
+ * @return array
+ */
+function mapboxjs_preset_load($name = NULL) {
+  $types = entity_load_multiple_by_name('mapboxjs_preset', isset($name) ? array($name) : FALSE);
+  return isset($name) ? reset($types) : $types;
+}
+
+/**
  * Implements hook_theme().
  */
 function mapboxjs_theme($existing, $type, $theme, $path) {

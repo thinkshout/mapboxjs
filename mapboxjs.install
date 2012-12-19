@@ -1,0 +1,79 @@
+<?php
+
+/**
+ * Implements hook_schema().
+ */
+function mapboxjs_schema() {
+
+  // MapBox.js map preset table.
+  $schema['mapboxjs_preset'] = array(
+    'description' => 'MapBox.js map presets',
+    'fields' => array(
+      'mapboxjs_preset_id' => array(
+        'type' => 'serial',
+        'not null' => TRUE,
+        'description' => 'Primary Key: Unique Mapbox.js preset entity ID.',
+      ),
+      'name' => array(
+        'description' => 'The machine-readable name of this mapboxjs_preset type.',
+        'type' => 'varchar',
+        'length' => 128,
+        'not null' => TRUE,
+      ),
+      'label' => array(
+        'description' => 'The human-readable name of this mapboxjs_preset type.',
+        'type' => 'varchar',
+        'length' => 128,
+        'not null' => TRUE,
+      ),
+      'type' => array(
+        'description' => 'The type/bundle of this mapboxjs_preset.',
+        'type' => 'varchar',
+        'length' => 32,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+      'created' => array(
+        'description' => 'The Unix timestamp when the mapboxjs_preset was created.',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'updated' => array(
+        'description' => 'The Unix timestamp when the mapboxjs_preset was most recently saved.',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      // following fields are for supporting exportable status.
+      'locked' => array(
+        'description' => 'A boolean indicating whether the administrator may delete this preset.',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+        'size' => 'tiny',
+      ),
+      'status' => array(
+        'type' => 'int',
+        'not null' => TRUE,
+        // Set the default to ENTITY_CUSTOM without using the constant as it is
+        // not safe to use it at this point.
+        'default' => 0x01,
+        'size' => 'tiny',
+        'description' => 'The exportable status of the entity.',
+      ),
+      'module' => array(
+        'description' => 'The name of the providing module if the entity has been defined in code.',
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => FALSE,
+      ),
+    ),
+    'primary key' => array('mapboxjs_preset_id'),
+    'unique keys' => array(
+      'name' => array('name'),
+    ),
+  );
+
+  return $schema;
+}
