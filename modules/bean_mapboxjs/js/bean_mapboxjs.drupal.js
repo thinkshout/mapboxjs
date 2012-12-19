@@ -28,8 +28,11 @@
 					mapbox.layer().url(settings.base_layer, function(layer) {
 						map.addLayer(layer);
 						addMultipleLayers();
-						// @TODO - Handle centering of the map.
-						//map.centerzoom({ lat: 40.74, lon: -73.98 }, 15, true);
+						// For the last layer loaded, center and zoom.
+						// mapbox.layer(settings.tilesets[1]['url'], function(data) {
+						// 	console.log(data);
+						// 	map.centerzoom({ lat: data.center.lat, lon: data.center.long }, data.zoom, true);
+						// })
 					})
 				} else {
 					// Otherwise, just add our standard layers stored as Link field values.
@@ -44,8 +47,9 @@
 				}
 
 				// Helper function for adding a single layer to map.
+				// @TODO - Make compositing a configuration option.
 				function addIndividualLayer(num) {
-					mapbox.layer().url(settings.tilesets[num]['url'], function(layer) {
+					mapbox.layer().composite(false).url(settings.tilesets[num]['url'], function(layer) {
 						// If "toggleable layers enabled, show in a layer switcher."
 						// Based on tutorial at http://mapbox.com/mapbox.js/example/layers/
 						if (settings.layer_toggle == 1) {
@@ -65,9 +69,6 @@
 							options.appendChild(item);
 						}
 						map.addLayer(layer);
-						// mapbox.load(layer.name, function(o) {
-						// 	console.log(o);
-						// })
 					});
 				};
 			})
