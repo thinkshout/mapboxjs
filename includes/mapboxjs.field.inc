@@ -33,7 +33,6 @@ function mapboxjs_field_instance_settings_form($field, $instance) {
  * Implements hook_field_is_empty().
  */
 function mapboxjs_field_is_empty($item, $field) {
-
 }
 
 
@@ -47,7 +46,7 @@ function mapboxjs_field_widget_info() {
       'field types' => array('mapboxjs_preset'),
       'settings' => array(),
       'behaviors' => array(
-        'multiple values' => FALSE,
+        'multiple values' => FIELD_BEHAVIOR_DEFAULT,
         'default value' => FIELD_BEHAVIOR_DEFAULT,
       ),
     ),
@@ -58,17 +57,20 @@ function mapboxjs_field_widget_info() {
  * Implements hook_field_widget_form().
  */
 function mapboxjs_field_widget_form(&$form, &$form_state, $field, $instance, $langcode, $items, $delta, $element) {
-  $options = array('' => t('-- No map selected --'));
-  foreach (mapboxjs_get_presets() as $preset) {
-    $options[$preset->name] = $preset->label;
-  }
-  $element += array(
-    '#type' => 'select',
-    '#options' => $options,
-    '#default_value' => isset($items[$delta]) ? $items[$delta] : array(),
-  );
-
-  return array('mapboxjs_preset' => $element);
+  switch ($instance['widget']['type']) {
+    case 'mapboxjs_select':
+      $options = array('' => t('-- No map selected --'));
+      foreach (mapboxjs_get_presets() as $preset) {
+        $options[$preset->name] = $preset->label;
+      }
+      $element['value'] = array(
+        '#type' => 'select',
+        '#options' => $options,
+        '#default_value' => isset($items[$delta]['value']) ? $items[$delta]['value'] : NULL,
+      );
+    break;
+  };
+  return $element;
 }
 
 /**
@@ -88,11 +90,6 @@ function mapboxjs_field_formatter_info() {
  */
 function mapboxjs_field_formatter_view($entity_type, $entity, $field, $instance, $langcode, $items, $display) {
   $element = array();
-
-  dpm($entity);
-  dpm($field);
-  dpm($instance);
-  dpm($items);
 
   return $element;
 }

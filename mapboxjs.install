@@ -198,25 +198,14 @@ function mapboxjs_install() {
  */
 function mapboxjs_field_schema($field) {
   $columns = array(
-    'mapboxjs_preset' => array(
+    'value' => array(
       'type' => 'varchar',
       'length' => 128,
       'not null' => FALSE,
     ),
   );
-  $indexes = array(
-    'mapboxjs_preset' => array('mapboxjs_preset'),
-  );
-  $foreign_keys = array(
-    'mapboxjs_preset' => array(
-      'table' => 'mapboxjs_preset',
-      'columns' => array('mapboxjs_preset' => 'name'),
-    ),
-  );
   return array(
     'columns' => $columns,
-    'indexes' => $indexes,
-    'foreign keys' => $foreign_keys,
   );
 }
 
