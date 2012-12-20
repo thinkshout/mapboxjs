@@ -1,5 +1,8 @@
 <?php
 
+// @TODO - Can this include be called from mapboxjs.info?
+module_load_include('inc', 'mapboxjs', 'includes/mapboxjs.field');
+
 /**
  * Implements hook_requirements().
  */
@@ -126,16 +129,16 @@ function mapboxjs_entity_info() {
 }
 
 /**
- * Loads a single mapboxjs_preset or all of them if no name provided.
+ * Gets an array of all registration types, keyed by the name.
  *
- * @param null $name
- *
- * @return array
+ * @param $name
+ *   If set, the type with the given name is returned.
  */
-function mapboxjs_preset_load($name = NULL) {
-  $types = entity_load_multiple_by_name('mapboxjs_preset', isset($name) ? array($name) : FALSE);
-  return isset($name) ? reset($types) : $types;
+function mapboxjs_get_presets($name = NULL) {
+  $presets = entity_load_multiple_by_name('mapboxjs_preset', isset($name) ? array($name) : FALSE);
+  return isset($name) ? reset($presets) : $presets;
 }
+
 
 /**
  * Implements hook_theme().

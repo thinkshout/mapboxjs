@@ -35,7 +35,7 @@ function mapboxjs_preset_form($form, &$form_state, MapboxjsPreset $preset = NULL
     '#default_value' => isset($preset) ? $preset->name : '',
     '#disabled' => !empty($preset->name),
     '#machine_name' => array(
-      'exists' => 'mapboxjs_preset_load',
+      'exists' => 'mapboxjs_get_presets',
       'source' => array('label')
     ),
   );

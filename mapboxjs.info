@@ -6,6 +6,5 @@ dependencies[] = libraries
 dependencies[] = link
 
 files[] = includes/mapboxjs.entity.inc
-;files[] = includes/mapboxjs.forms.inc
 
 configure = admin/structure/mapboxjs/presets
