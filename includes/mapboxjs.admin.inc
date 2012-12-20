@@ -28,7 +28,6 @@ function mapboxjs_preset_form($form, &$form_state, MapboxjsPreset $preset = NULL
     '#maxlength' => MAPBOXJS_PRESET_NAME_LENGTH,
     '#size' => 30,
   );
-
   $form['name'] = array(
     '#title' => t('Name'),
     '#type' => 'machine_name',
@@ -40,8 +39,7 @@ function mapboxjs_preset_form($form, &$form_state, MapboxjsPreset $preset = NULL
       'source' => array('label')
     ),
   );
-
-  // Provide bean administrator with control over the map container height.
+  // Provide preset administrator with control over the map container height.
   $form['height'] = array(
     '#type' => 'textfield',
     '#title' => t('Mabox map height'),
@@ -79,6 +77,9 @@ function mapboxjs_preset_form($form, &$form_state, MapboxjsPreset $preset = NULL
     '#element_validate' => array('mapboxjs_base_layer_validate'),
   );
 
+  // Attach our locked link field.
+  field_attach_form('mapboxjs_preset', $preset, $form, $form_state);
+
   $form['actions'] = array('#type' => 'actions');
   $form['actions']['submit'] = array(
     '#value' => t('Save preset'),
@@ -90,11 +91,22 @@ function mapboxjs_preset_form($form, &$form_state, MapboxjsPreset $preset = NULL
 
 /**
  * Helper function to validate base tileset URL.
+ * @TODO - Consider adding this validation to mapboxjs_preset_form_validate().
  */
 function mapboxjs_base_layer_validate($element, &$form_state, $form) {
-   if (!empty($element['#value']) && !(valid_url($element['#value'], TRUE))) {
-     form_error($element, t('Enter a valid URL or leave this field blank.'));
-   }
+  if (!empty($element['#value']) && !(valid_url($element['#value'], TRUE))) {
+    form_error($element, t('Enter a valid URL or leave this field blank.'));
+  }
+}
+
+/**
+ * Validation handler for mapboxjs_preset_form().
+ */
+function mapboxjs_preset_form_validate($form, &$form_state) {
+  // Call to field_attach_form_validate() ensures that locked link field is validated.
+  $preset = $form_state['mapboxjs_preset'];
+  field_attach_form_validate('mapboxjs_preset', $preset, $form, $form_state);
+  // @FIXME - For some reason, link field URL is not getting validated.
 }
 
 /**
@@ -116,6 +128,9 @@ function mapboxjs_preset_form_submit($form, &$form_state) {
   else {
     $preset = entity_create('mapboxjs_preset', $values);
   }
+
+  // Make sure that attached link field is saved with our custom entity.
+  field_attach_submit('mapboxjs_preset', $preset, $form, $form_state);
 
   $preset->save();
 
