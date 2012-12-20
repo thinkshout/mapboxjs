@@ -33,6 +33,7 @@ function mapboxjs_field_instance_settings_form($field, $instance) {
  * Implements hook_field_is_empty().
  */
 function mapboxjs_field_is_empty($item, $field) {
+
 }
 
 
@@ -57,6 +58,7 @@ function mapboxjs_field_widget_info() {
  * Implements hook_field_widget_form().
  */
 function mapboxjs_field_widget_form(&$form, &$form_state, $field, $instance, $langcode, $items, $delta, $element) {
+  // @TODO - Test for field settings that do not provide default value.
   switch ($instance['widget']['type']) {
     case 'mapboxjs_select':
       $options = array('' => t('-- No map selected --'));
@@ -64,6 +66,8 @@ function mapboxjs_field_widget_form(&$form, &$form_state, $field, $instance, $la
         $options[$preset->name] = $preset->label;
       }
       $element['value'] = array(
+        '#title' => $instance['label'],
+        '#description' => $instance['description'],
         '#type' => 'select',
         '#options' => $options,
         '#default_value' => isset($items[$delta]['value']) ? $items[$delta]['value'] : NULL,
