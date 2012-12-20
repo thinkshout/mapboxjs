@@ -41,6 +41,44 @@ function mapboxjs_preset_form($form, &$form_state, MapboxjsPreset $preset = NULL
     ),
   );
 
+  // Provide bean administrator with control over the map container height.
+  $form['height'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Mabox map height'),
+    '#description' => t('Enter the height in pixels for this map.'),
+    '#default_value' => isset($preset->height) ? $preset->height : '500',
+    '#size' => '5',
+    '#field_suffix' => t('px'),
+    '#element_validate' => array('element_validate_integer_positive'),
+  );
+  // Enable/disable zoom controls.
+  $form['zoomer'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Provide zoom controls'),
+    '#default_value' => isset($preset->zoomer) ? $preset->zoomer : TRUE,
+  );
+  // Enable/disable fullscreen control.
+  $form['fullscreen'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Provide fullscreen map option'),
+    '#default_value' => isset($preset->fullscreen) ? $preset->fullscreen : FALSE,
+  );
+  // Enable/disable layer toggle control.
+  $form['layer_toggle'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Provide layer toggle controls'),
+    '#description' => t('Select this option to present a layer switcher to toggle on/off the tileset layers provided above.'),
+    '#default_value' => isset($preset->layer_toggle) ? $preset->layer_toggle : FALSE,
+  );
+  // Add an optional base tileset layer.
+  $form['base_layer'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Base tileset'),
+    '#description' => t('Optionally, you can enter the URL of a base tileset, such as a terrain layer. This layer must support the <a href="https://github.com/mapbox/tilejson-spec">TileJSON</a> format.'),
+    '#default_value' => isset($preset->base_layer) ? $preset->base_layer : '',
+    '#element_validate' => array('mapboxjs_base_layer_validate'),
+  );
+
   $form['actions'] = array('#type' => 'actions');
   $form['actions']['submit'] = array(
     '#value' => t('Save preset'),
@@ -51,13 +89,12 @@ function mapboxjs_preset_form($form, &$form_state, MapboxjsPreset $preset = NULL
 }
 
 /**
- * Validate mapboxjs_preset_form().
- *
- * @param $form
- * @param $form_state
+ * Helper function to validate base tileset URL.
  */
-function mapboxjs_preset_form_validate($form, &$form_state) {
-
+function mapboxjs_base_layer_validate($element, &$form_state, $form) {
+   if (!empty($element['#value']) && !(valid_url($element['#value'], TRUE))) {
+     form_error($element, t('Enter a valid URL or leave this field blank.'));
+   }
 }
 
 /**
@@ -67,21 +104,17 @@ function mapboxjs_preset_form_validate($form, &$form_state) {
  * @param $form_state
  */
 function mapboxjs_preset_form_submit($form, &$form_state) {
-  $values = $form_state['values'];
 
-  $params = array(
-    'label' => $values['label'],
-  );
+  $values = $form_state['values'];
 
   if ($form_state['mapboxjs_preset']->name) {
     $preset = $form_state['mapboxjs_preset'];
-    foreach ($params as $key => $value) {
+    foreach ($values as $key => $value) {
       $preset->{$key} = $value;
     }
   }
   else {
-    $params['name'] = $values['name'];
-    $preset = entity_create('mapboxjs_preset', $params);
+    $preset = entity_create('mapboxjs_preset', $values);
   }
 
   $preset->save();
