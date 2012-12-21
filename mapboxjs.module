@@ -48,7 +48,12 @@ function mapboxjs_library() {
     'website' => 'http://mapbox.com/mapbox.js',
     'version' => '0.6.6',
     'js' => array(
+      // Load the MapBox.js javascript library.
       libraries_get_path('mapboxjs') . '/mapbox.js' => array(
+        'type' => 'file',
+      ),
+      // Load our javascript implementation of MapBox.js.
+      drupal_get_path('module', 'mapboxjs') . '/js/mapboxjs.drupal.js' => array(
         'type' => 'file',
       ),
     ),
@@ -96,7 +101,7 @@ function mapboxjs_access() {
 function mapboxjs_entity_info() {
   $return = array(
     'mapboxjs_preset' => array(
-      'label' => t('MapBox.js Map Preset'),
+      'label' => t('MapBox.js map preset'),
       'controller class' => 'EntityAPIControllerExportable',
       'entity class' => 'MapboxjsPreset',
       'base table' => 'mapboxjs_preset',
@@ -114,7 +119,7 @@ function mapboxjs_entity_info() {
       ),
       'bundles' => array(
         'mapboxjs_preset' => array(
-          'label' => 'Mapbox.js preset',
+          'label' => 'Mapbox.js map preset',
         ),
       ),
       // Enable the entity API's admin UI.

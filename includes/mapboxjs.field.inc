@@ -99,7 +99,6 @@ function mapboxjs_field_formatter_view($entity_type, $entity, $field, $instance,
   foreach ($items as $delta => $item) {
     $preset = mapboxjs_get_presets($item['value']);
     if ($preset != FALSE) {
-      drupal_add_js(drupal_get_path('module', 'mapboxjs') . '/js/mapboxjs.drupal.js');
       $map_id = 'map-' . $preset->name . '-' . $delta;
       // Grab our tileset URLs.
       $tileset_items = field_get_items('mapboxjs_preset', $preset, 'field_tileset_urls');
