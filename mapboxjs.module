@@ -90,6 +90,8 @@ function mapboxjs_access() {
 
 /**
  * Implements hook_entity_info().
+ *
+ * Provides our custom entity type/bundle for MapBox.js map presets.
  */
 function mapboxjs_entity_info() {
   $return = array(

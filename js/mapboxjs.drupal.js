@@ -3,7 +3,7 @@
 	Drupal.behaviors.bean_mapboxjs = {
 		attach: function(context, settings) {
 
-			$(settings.bean_mapboxjs).each(function() {
+			$(settings.mapboxjs).each(function() {
 
 				// Load a settings object with all of our map settings.
 				var settings = {};
