@@ -85,6 +85,11 @@ function mapboxjs_preset_form($form, &$form_state, MapboxjsPreset $preset = NULL
     '#value' => t('Save preset'),
     '#type' => 'submit',
   );
+  // @TODO - Add option for previewing the preset as a fully-rendered map.
+  // $form['actions']['preview'] = array(
+  //   '#value' => t('Preview preset'),
+  //   '#type' => 'button',
+  // );
 
   return $form;
 }
