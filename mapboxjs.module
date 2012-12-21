@@ -16,7 +16,7 @@ function mapboxjs_requirements($phase) {
       'value' => t('The !mapboxjs javascript library was not found. Please !download it into the mapbox subdirectory of the libraries folder.',
         array(
           '!mapboxjs' => l('MapBox.js', 'http://mapbox.com/mapbox.js'),
-          '!download' => l('download', 'http://api.tiles.mapbox.com/mapbox.js/v0.6.6/mapbox.js'),
+          '!download' => l('download', 'http://api.tiles.mapbox.com/mapbox.js/v0.6.7/mapbox.js'),
         )
       ),
       'severity' => REQUIREMENT_ERROR,
@@ -29,7 +29,7 @@ function mapboxjs_requirements($phase) {
       'value' => t('The !mapboxjs css file was not found. Please !download it into the mapbox subdirectory of the libraries folder.',
         array(
           '!mapboxjs' => l('MapBox.js', 'http://mapbox.com/mapbox.js'),
-          '!download' => l('download', 'http://api.tiles.mapbox.com/mapbox.js/v0.6.6/mapbox.css'),
+          '!download' => l('download', 'http://api.tiles.mapbox.com/mapbox.js/v0.6.7/mapbox.css'),
         )
       ),
       'severity' => REQUIREMENT_ERROR,
