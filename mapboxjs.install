@@ -92,6 +92,13 @@ function mapboxjs_schema() {
         'length' => 2048,
         'not null' => FALSE,
       ),
+      'composite' => array(
+        'description' => 'Boolean determining if tile compositing should be used.',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 1,
+        'size' => 'tiny',
+      ),
       'created' => array(
         'description' => 'The Unix timestamp when the mapboxjs_preset was created.',
         'type' => 'int',

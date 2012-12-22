@@ -107,6 +107,13 @@ function mapboxjs_preset_form($form, &$form_state, MapboxjsPreset $preset = NULL
     '#default_value' => isset($preset->base_layer) ? $preset->base_layer : '',
     '#element_validate' => array('mapboxjs_base_layer_validate'),
   );
+  // Enable/disable tileset compositing.
+  $form['composite'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Enable tileset compositing'),
+    '#description' => t('By default, multiple tilesets will be returned by the MapBox API as a single, composited tileset. This improves performance and reduces the number of tile requests to the MapBox API. In certain cases, however, it is helpful to disable compositing for smoother transitions when toggling on/off one or more tilesets.'),
+    '#default_value' => isset($preset->composite) ? $preset->composite : TRUE,
+  );
 
   // Attach our locked link field.
   field_attach_form('mapboxjs_preset', $preset, $form, $form_state);
