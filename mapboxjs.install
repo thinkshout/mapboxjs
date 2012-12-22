@@ -85,19 +85,6 @@ function mapboxjs_schema() {
         'length' => 2048,
         'not null' => FALSE,
       ),
-      'attribution' => array(
-        'type' => 'text',
-        'not null' => FALSE,
-        'size' => 'big',
-        'description' => 'Optional map preset attribution.',
-        'translatable' => TRUE,
-      ),
-      'format' => array(
-        'type' => 'varchar',
-        'length' => 255,
-        'not null' => FALSE,
-        'description' => 'The {filter_format}.format of the attribution.',
-      ),
       'created' => array(
         'description' => 'The Unix timestamp when the mapboxjs_preset was created.',
         'type' => 'int',

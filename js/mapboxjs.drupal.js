@@ -19,9 +19,6 @@
 				if (settings.fullscreen == 1) {
 					map.ui.fullscreen.add();
 				}
-				if (settings.attribution !== '') {
-					map.ui.attribution.add();
-				}
 				map.centerzoom({ lat: settings.lat, lon: settings.lon }, settings.zoom);
 
 				// If the map switcher ui element is included, grab it for later.

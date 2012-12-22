@@ -101,16 +101,6 @@ function mapboxjs_preset_form($form, &$form_state, MapboxjsPreset $preset = NULL
     '#default_value' => isset($preset->base_layer) ? $preset->base_layer : '',
     '#element_validate' => array('mapboxjs_base_layer_validate'),
   );
-  // Add map attribution.
-  $form['attribution'] = array(
-    '#type' => 'text_format',
-    '#title' => t('Map attribution'),
-    '#description' => t('Optionally, you can enter attribution for this map.'),
-    '#base_type' => 'textfield',
-    '#default_value' => isset($preset->attribution) ? $preset->attribution : '',
-    '#format' => isset($preset->format) ? $preset->format : NULL,
-    '#required' => FALSE,
-  );
 
   // Attach our locked link field.
   field_attach_form('mapboxjs_preset', $preset, $form, $form_state);
@@ -162,10 +152,6 @@ function mapboxjs_preset_form_validate($form, &$form_state) {
 function mapboxjs_preset_form_submit($form, &$form_state) {
 
   $values = $form_state['values'];
-  // Break out attribution value and attribution's input format into separate value
-  $attribution = $values['attribution'];
-  $values['attribution'] = $attribution['value'];
-  $values['format'] = $attribution['format'];
 
   if ($form_state['mapboxjs_preset']->name) {
     $preset = $form_state['mapboxjs_preset'];
