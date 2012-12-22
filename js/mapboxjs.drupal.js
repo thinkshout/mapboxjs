@@ -30,10 +30,10 @@
 						addMultipleLayers();
 						// For the last layer loaded, center and zoom.
 						// mapbox.layer(settings.tilesets[1]['url'], function(data) {
-						// 	console.log(data);
-						// 	map.centerzoom({ lat: data.center.lat, lon: data.center.long }, data.zoom, true);
+						// console.log(data);
+						// map.centerzoom({ lat: data.center.lat, lon: data.center.long }, data.zoom, true);
 						// })
-					})
+					});
 				} else {
 					// Otherwise, just add our standard layers stored as Link field values.
 					addMultipleLayers(); // @TODO - Test me.
@@ -70,8 +70,8 @@
 						}
 						map.addLayer(layer);
 					});
-				};
-			})
+				}
+			});
 		}
 	}
 
