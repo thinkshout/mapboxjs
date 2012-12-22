@@ -19,7 +19,7 @@
 				if (settings.fullscreen == 1) {
 					map.ui.fullscreen.add();
 				}
-				map.centerzoom({ lat: 38.9, lon: -77.03 }, settings.zoom);
+				map.centerzoom({ lat: settings.lat, lon: settings.lon }, settings.zoom);
 
 				// If the map switcher ui element is included, grab it for later.
 				var options = document.getElementById('map-ui');

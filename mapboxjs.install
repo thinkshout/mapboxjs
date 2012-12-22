@@ -39,6 +39,18 @@ function mapboxjs_schema() {
         'not null' => TRUE,
         'default' => 500,
       ),
+      'lat' => array(
+        'description' => 'Latitude value of MapBox.js map center point.',
+        'type' => 'float',
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'lon' => array(
+        'description' => 'Longitude value of MapBox.js map center point.',
+        'type' => 'float',
+        'not null' => TRUE,
+        'default' => 0,
+      ),
       'zoom' => array(
         'description' => 'The default zoom level of a map rendered by MapBox.js.',
         'type' => 'int',

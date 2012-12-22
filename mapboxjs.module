@@ -166,6 +166,8 @@ function mapboxjs_render_preset($preset) {
   $settings = array(
   'mapID' => $map_id,
   'configuration' => array(
+    'lat' => $preset->lat,
+    'lon' => $preset->lon,
     'zoom' => $preset->zoom,
     'zoomer' => $preset->zoomer,
     'fullscreen' => $preset->fullscreen,

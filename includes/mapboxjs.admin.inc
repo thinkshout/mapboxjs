@@ -49,10 +49,28 @@ function mapboxjs_preset_form($form, &$form_state, MapboxjsPreset $preset = NULL
     '#field_suffix' => t('px'),
     '#element_validate' => array('element_validate_integer_positive'),
   );
+  // Set the lat/lon center points.
+  $form['center'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Center point'),
+    '#description' => t('Enter the lat/long center point of this map in decimal degrees.'),
+    '#collapsible' => FALSE,
+  );
+  $form['center']['lat'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Latitude'),
+    '#default_value' => isset($preset->lat) ? $preset->lat : 0,
+  );
+  $form['center']['lon'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Longitude'),
+    '#default_value' => isset($preset->lon) ? $preset->lon : 0,
+  );
   // Set default zoom level.
   $form['zoom'] = array(
     '#type' => 'select',
-    '#title' => t('Select the default zoom level for this map.'),
+    '#title' => t('Zoom level'),
+    '#description' => t('Select the default zoom level for this map.'),
     '#options' => drupal_map_assoc(array(0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20)),
     '#default_value' => isset($preset->zoom) ? $preset->zoom : 8,
   );
@@ -110,6 +128,15 @@ function mapboxjs_base_layer_validate($element, &$form_state, $form) {
  * Validation handler for mapboxjs_preset_form().
  */
 function mapboxjs_preset_form_validate($form, &$form_state) {
+  // Validate lat/lon values.
+  $lat = $form_state['values']['lat'];
+  $lon = $form_state['values']['lon'];
+  if (!empty($lat) & (!is_numeric($lat) || $lat > 90  || $lat < -90)) {
+    form_set_error('lat', t('Enter the latitude of the center point as a decimal between -90 and 90.'));
+  }
+  if (!empty($lon) & (!is_numeric($lon) || $lon > 180  || $lon < -180)) {
+    form_set_error('lon', t('Enter the longitude of the center point as a decimal between -180 and 180.'));
+  }
   // Call to field_attach_form_validate() ensures that locked link field is validated.
   $preset = $form_state['mapboxjs_preset'];
   field_attach_form_validate('mapboxjs_preset', $preset, $form, $form_state);
