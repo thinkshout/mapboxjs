@@ -60,11 +60,13 @@
 								e.stopPropagation();
 								map.getLayer(this.id).enabled ? map.getLayer(this.id).disable() : map.getLayer(this.id).enable();
 								this.className = map.getLayer(this.id).enabled ? 'active' : '';
+								map.interaction.refresh();
 							};
 							item.appendChild(option);
 							options.appendChild(item);
 						}
 						map.addLayer(layer);
+						map.interaction.auto();
 					});
 				}
 			});
