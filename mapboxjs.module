@@ -179,14 +179,14 @@ function mapboxjs_render_preset($preset) {
   // Pass our settings to Drupal's global js variable.
   drupal_add_js(array('mapboxjs' => $settings), 'setting');
 
-  // Generate our map container and place on the page.
-  $map['#markup'] = mapboxjs_render_map($map_id, $preset->height . 'px');
-
   // Add additional markup and CSS if layer toggle option selected.
   if ($preset->layer_toggle == TRUE) {
     drupal_add_css(drupal_get_path('module', 'mapboxjs') . '/css/layer_toggle.css');
-    $map['#markup'] .= "<ul id='map-ui'></ul>";
+    $extras = "<ul id='map-ui'></ul>";
   }
+
+  // Generate our map container and place on the page.
+  $map['#markup'] = mapboxjs_render_map($map_id, $preset->height . 'px', $extras);
 
   return $map;
 }
@@ -198,7 +198,7 @@ function mapboxjs_render_preset($preset) {
 function mapboxjs_theme($existing, $type, $theme, $path) {
   return array(
     'mapboxjs_map' => array(
-      'arguments' => array('map_id' => NULL, 'height' => '400px'),
+      'arguments' => array('map_id' => NULL, 'height' => '400px', $extras => NULL),
       'template' => 'mapboxjs_map',
     ),
   );
@@ -209,13 +209,15 @@ function mapboxjs_theme($existing, $type, $theme, $path) {
  *
  * @param string $map_id
  * @param string $height
+ * @param string $extras
+ *    Contains additional markup or controls embedded in the map element.
  *
  * @return string map markup
  *
  * @TODO - Provide some additional default map settings that can be overridden.
  */
-function mapboxjs_render_map($map_id = 'mapboxjs-map', $height = '400px') {
+function mapboxjs_render_map($map_id = 'mapboxjs-map', $height = '400px', $extras = NULL) {
   // Add javascript and css dependencies.
   drupal_add_library('mapboxjs', 'mapboxjs');
-  return theme('mapboxjs_map', array('map_id' => $map_id, 'height' => $height));
+  return theme('mapboxjs_map', array('map_id' => $map_id, 'height' => $height, 'extras' => $extras));
 }
