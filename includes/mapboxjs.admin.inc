@@ -108,7 +108,7 @@ function mapboxjs_preset_form($form, &$form_state, MapboxjsPreset $preset = NULL
     '#description' => t('Optionally, you can enter attribution for this map.'),
     '#base_type' => 'textfield',
     '#default_value' => isset($preset->attribution) ? $preset->attribution : '',
-    '#format' => isset($preset->attribution) ? $preset->format : NULL,
+    '#format' => isset($preset->format) ? $preset->format : NULL,
     '#required' => FALSE,
   );
 
@@ -162,6 +162,10 @@ function mapboxjs_preset_form_validate($form, &$form_state) {
 function mapboxjs_preset_form_submit($form, &$form_state) {
 
   $values = $form_state['values'];
+  // Break out attribution value and attribution's input format into separate value
+  $attribution = $values['attribution'];
+  $values['attribution'] = $attribution['value'];
+  $values['format'] = $attribution['format'];
 
   if ($form_state['mapboxjs_preset']->name) {
     $preset = $form_state['mapboxjs_preset'];

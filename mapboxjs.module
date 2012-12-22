@@ -173,6 +173,7 @@ function mapboxjs_render_preset($preset) {
     'fullscreen' => $preset->fullscreen,
     'layer_toggle' => $preset->layer_toggle,
     'base_layer' => $preset->base_layer,
+    'attribution' => check_markup($preset->attribution, $preset->format),
     'tilesets' => $tilesets,
   ));
   // Pass our settings to Drupal's global js variable.
