@@ -1,0 +1,5 @@
+name = MapBox.JS Block
+description = Provides a block for each MapBox.js map preset.
+core = 7.x
+
+dependencies[] = mapboxjs
