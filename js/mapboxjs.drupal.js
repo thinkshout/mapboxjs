@@ -24,7 +24,7 @@
 				var options = document.getElementById('map-ui');
 
 				// If a base layer is requested, add it here before adding additional layers.
-				if (settings.base_layer != '') {
+				if (settings.base_layer !== '') {
 					mapbox.layer().url(settings.base_layer, function(layer) {
 						map.addLayer(layer);
 						addMultipleLayers();
