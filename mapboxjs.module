@@ -138,12 +138,53 @@ function mapboxjs_entity_info() {
 /**
  * Gets an array of all registration types, keyed by the name.
  *
- * @param $name
+ * @param string $name
  *   If set, the type with the given name is returned.
  */
 function mapboxjs_get_presets($name = NULL) {
   $presets = entity_load_multiple_by_name('mapboxjs_preset', isset($name) ? array($name) : FALSE);
   return isset($name) ? reset($presets) : $presets;
+}
+
+/**
+ * Render a preset as a map.
+ *
+ * @param array $preset
+ *
+ * @return MapBox.js map as a renderable array
+ */
+function mapboxjs_render_preset($preset) {
+  $map = array();
+
+  $map_id = 'map-' . $preset->name;
+  // Grab our tileset URLs.
+  $tileset_items = field_get_items('mapboxjs_preset', $preset, 'field_tileset_urls');
+  $tilesets = array();
+  foreach($tileset_items as $item) {
+    $tilesets[] = array('title' => $item['title'], 'url' => $item['url']);
+  }
+  $settings = array(
+  'mapID' => $map_id,
+  'configuration' => array(
+    'zoomer' => $preset->zoomer,
+    'fullscreen' => $preset->fullscreen,
+    'layer_toggle' => $preset->layer_toggle,
+    'base_layer' => $preset->base_layer,
+    'tilesets' => $tilesets,
+  ));
+  // Pass our settings to Drupal's global js variable.
+  drupal_add_js(array('mapboxjs' => $settings), 'setting');
+
+  // Generate our map container and place on the page.
+  $map['#markup'] = mapboxjs_render_map($map_id, $preset->height . 'px');
+
+  // Add additional markup and CSS if layer toggle option selected.
+  if ($preset->layer_toggle == TRUE) {
+    drupal_add_css(drupal_get_path('module', 'mapboxjs') . '/css/layer_toggle.css');
+    $map['#markup'] .= "<ul id='map-ui'></ul>";
+  }
+
+  return $map;
 }
 
 
@@ -166,6 +207,8 @@ function mapboxjs_theme($existing, $type, $theme, $path) {
  * @param string $height
  *
  * @return string map markup
+ *
+ * @TODO - Provide some additional default map settings that can be overridden.
  */
 function mapboxjs_render_map($map_id = 'mapboxjs-map', $height = '400px') {
   // Add javascript and css dependencies.
