@@ -171,6 +171,7 @@ function mapboxjs_render_preset($preset) {
     'zoom' => $preset->zoom,
     'zoomer' => $preset->zoomer,
     'fullscreen' => $preset->fullscreen,
+    'legend' => $preset->legend,
     'layer_toggle' => $preset->layer_toggle,
     'base_layer' => $preset->base_layer,
     'attribution' => check_markup($preset->attribution, $preset->format),

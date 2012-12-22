@@ -86,6 +86,12 @@ function mapboxjs_preset_form($form, &$form_state, MapboxjsPreset $preset = NULL
     '#title' => t('Provide fullscreen map option'),
     '#default_value' => isset($preset->fullscreen) ? $preset->fullscreen : FALSE,
   );
+  // Enable/disable map legend.
+  $form['legend'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Provide a map legend, if included with MapBox tileset(s).'),
+    '#default_value' => isset($preset->legend) ? $preset->legend : FALSE,
+  );
   // Enable/disable layer toggle control.
   $form['layer_toggle'] = array(
     '#type' => 'checkbox',

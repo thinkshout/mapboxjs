@@ -14,6 +14,8 @@ class MapboxjsPreset extends Entity {
     $lon,
     $zoom,
     $zoomer,
+    $fullscreen,
+    $legend,
     $layer_toggle,
     $base_layer,
     $type = 'mapboxjs_preset', // only one bundle type for now

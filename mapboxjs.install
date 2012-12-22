@@ -71,6 +71,13 @@ function mapboxjs_schema() {
         'default' => 0,
         'size' => 'tiny',
       ),
+      'legend' => array(
+        'description' => 'Boolean determining if the map legend should be displayed.',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+        'size' => 'tiny',
+      ),
       'layer_toggle' => array(
         'description' => 'Boolean determining if layers should be toggleable in the display.',
         'type' => 'int',
