@@ -11,7 +11,7 @@
 					settings[setting] = this.configuration[setting];
 				}
 
-				// Load a map with the right ID and optionally add some controls.
+				// Load a map with the right ID and optionally add some controls and variables.
 				var map = mapbox.map(this.mapID);
 				if (settings.zoomer == 1) {
 					map.ui.zoomer.add();
@@ -19,6 +19,7 @@
 				if (settings.fullscreen == 1) {
 					map.ui.fullscreen.add();
 				}
+				map.centerzoom({ lat: 38.9, lon: -77.03 }, settings.zoom);
 
 				// If the map switcher ui element is included, grab it for later.
 				var options = document.getElementById('map-ui');
@@ -28,11 +29,6 @@
 					mapbox.layer().url(settings.base_layer, function(layer) {
 						map.addLayer(layer);
 						addMultipleLayers();
-						// For the last layer loaded, center and zoom.
-						// mapbox.layer(settings.tilesets[1]['url'], function(data) {
-						// console.log(data);
-						// map.centerzoom({ lat: data.center.lat, lon: data.center.long }, data.zoom, true);
-						// })
 					});
 				} else {
 					// Otherwise, just add our standard layers stored as Link field values.

@@ -49,6 +49,13 @@ function mapboxjs_preset_form($form, &$form_state, MapboxjsPreset $preset = NULL
     '#field_suffix' => t('px'),
     '#element_validate' => array('element_validate_integer_positive'),
   );
+  // Set default zoom level.
+  $form['zoom'] = array(
+    '#type' => 'select',
+    '#title' => t('Select the default zoom level for this map.'),
+    '#options' => drupal_map_assoc(array(0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20)),
+    '#default_value' => isset($preset->zoom) ? $preset->zoom : 8,
+  );
   // Enable/disable zoom controls.
   $form['zoomer'] = array(
     '#type' => 'checkbox',
@@ -85,11 +92,6 @@ function mapboxjs_preset_form($form, &$form_state, MapboxjsPreset $preset = NULL
     '#value' => t('Save preset'),
     '#type' => 'submit',
   );
-  // @TODO - Add option for previewing the preset as a fully-rendered map.
-  // $form['actions']['preview'] = array(
-  //   '#value' => t('Preview preset'),
-  //   '#type' => 'button',
-  // );
 
   return $form;
 }

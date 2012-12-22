@@ -39,6 +39,12 @@ function mapboxjs_schema() {
         'not null' => TRUE,
         'default' => 500,
       ),
+      'zoom' => array(
+        'description' => 'The default zoom level of a map rendered by MapBox.js.',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 8,
+      ),
       'zoomer' => array(
         'description' => 'Boolean determining if zoom controls should be displayed.',
         'type' => 'int',

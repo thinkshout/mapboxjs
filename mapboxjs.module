@@ -166,6 +166,7 @@ function mapboxjs_render_preset($preset) {
   $settings = array(
   'mapID' => $map_id,
   'configuration' => array(
+    'zoom' => $preset->zoom,
     'zoomer' => $preset->zoomer,
     'fullscreen' => $preset->fullscreen,
     'layer_toggle' => $preset->layer_toggle,

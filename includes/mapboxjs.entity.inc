@@ -10,6 +10,7 @@ class MapboxjsPreset extends Entity {
     $name,
     $label,
     $height,
+    $zoom,
     $zoomer,
     $layer_toggle,
     $base_layer,
