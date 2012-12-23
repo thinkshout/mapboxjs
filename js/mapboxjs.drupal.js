@@ -74,7 +74,6 @@
 						}
 						map.addLayer(layer);
 						map.interaction.auto();
-						console.log(layer);
 					});
 				}
 			});
