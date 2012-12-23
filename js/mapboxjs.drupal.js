@@ -48,10 +48,9 @@
 				// Helper function for adding a single layer to map.
 				// @TODO - Make compositing a configuration option.
 				function addIndividualLayer(num) {
+					var composite = true;
 					if (settings.composite == '0') {
-						var composite = false;
-					} else {
-						var composite = true;
+						composite = false;
 					}
 					mapbox.layer().composite(composite).url(settings.tilesets[num]['url'], function(layer) {
 						// If "toggleable layers enabled, show in a layer switcher."
@@ -80,6 +79,6 @@
 				}
 			});
 		}
-	}
+	};
 
 })(jQuery);
