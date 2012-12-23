@@ -181,6 +181,7 @@ function mapboxjs_render_preset($preset) {
   drupal_add_js(array('mapboxjs' => $settings), 'setting');
 
   // Add additional markup and CSS if layer toggle option selected.
+  $extras = '';
   if ($preset->layer_toggle == TRUE) {
     drupal_add_css(drupal_get_path('module', 'mapboxjs') . '/css/layer_toggle.css');
     $extras = "<ul id='map-ui'></ul>";
