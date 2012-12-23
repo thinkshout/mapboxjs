@@ -1,6 +1,6 @@
 (function($) {
 
-	Drupal.behaviors.bean_mapboxjs = {
+	Drupal.behaviors.mapboxjs = {
 		attach: function(context, settings) {
 
 			$(settings.mapboxjs).each(function() {
