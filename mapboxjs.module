@@ -63,6 +63,11 @@ function mapboxjs_library() {
         'media' => 'screen',
         'group' => CSS_DEFAULT,
       ),
+      drupal_get_path('module', 'mapboxjs') . '/css/mapboxjs.drupal.css' => array(
+        'type' => 'file',
+        'media' => 'screen',
+        'group' => CSS_DEFAULT,
+      )
     ),
   );
   return $libraries;
@@ -157,12 +162,21 @@ function mapboxjs_render_preset($preset) {
   $map = array();
 
   $map_id = 'map-' . $preset->name;
-  // Grab our tileset URLs.
-  $tileset_items = field_get_items('mapboxjs_preset', $preset, 'field_tileset_urls');
-  $tilesets = array();
-  foreach($tileset_items as $item) {
-    $tilesets[] = array('title' => $item['title'], 'url' => $item['url']);
+  // Grab our required base tileset(s).
+  $base_tileset_items = field_get_items('mapboxjs_preset', $preset, 'field_base_tilesets');
+  $base_tilesets = array();
+  foreach($base_tileset_items as $item) {
+    $base_tilesets[] = array('title' => $item['title'], 'url' => $item['url']);
   }
+  // Grab our optional tilesets to be laid on top of base tileset(s).
+  $optional_tileset_items = field_get_items('mapboxjs_preset', $preset, 'field_optional_tilesets');
+  if (!empty($optional_tileset_items)) {
+    $optional_tilesets = array();
+    foreach($optional_tileset_items as $item) {
+      $optional_tilesets[] = array('title' => $item['title'], 'url' => $item['url']);
+    }
+  }
+
   $settings = array(
   'mapID' => $map_id,
   'configuration' => array(
@@ -173,18 +187,28 @@ function mapboxjs_render_preset($preset) {
     'fullscreen' => $preset->fullscreen,
     'legend' => $preset->legend,
     'layer_toggle' => $preset->layer_toggle,
-    'base_layer' => $preset->base_layer,
     'composite' => $preset->composite,
-    'tilesets' => $tilesets,
+    'base_tilesets' => $base_tilesets,
+    'optional_tilesets' => $base_tilesets,
   ));
   // Pass our settings to Drupal's global js variable.
   drupal_add_js(array('mapboxjs' => $settings), 'setting');
 
-  // Add additional markup and CSS if layer toggle option selected.
-  $extras = '';
+  // Optionally, start adding extra controls.
+  $extras = NULL;
+  // Add a base tile switcher if we have more than one base tileset defined.
+  if (count($base_tilesets) > 1) {
+    $switcher = '';
+    // @TODO - Generate markup using renderable array.
+    foreach($base_tilesets as $key => $tileset) {
+      $switcher .= "<li><a href='#' id='base-tile-" . $key . "'>" . $tileset['title'] . "</a></li>";
+    }
+    $switcher = "<div id='map-switcher'><ul>" . $switcher . "</ul></div>";
+    $extras .= $switcher;
+  }
+  // Add additional markup layer toggle controls option selected.
   if ($preset->layer_toggle == TRUE) {
-    drupal_add_css(drupal_get_path('module', 'mapboxjs') . '/css/layer_toggle.css');
-    $extras = "<ul id='map-ui'></ul>";
+    $extras .= "<ul id='map-toggle'></ul>";
   }
 
   // Generate our map container and place on the page.
@@ -200,7 +224,7 @@ function mapboxjs_render_preset($preset) {
 function mapboxjs_theme($existing, $type, $theme, $path) {
   return array(
     'mapboxjs_map' => array(
-      'arguments' => array('map_id' => NULL, 'height' => '400px', $extras => NULL),
+      'arguments' => array('map_id' => NULL, 'height' => '400px', 'extras' => ''),
       'template' => 'mapboxjs_map',
     ),
   );

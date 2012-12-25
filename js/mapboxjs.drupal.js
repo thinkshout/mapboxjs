@@ -24,35 +24,38 @@
 				}
 				map.centerzoom({ lat: settings.lat, lon: settings.lon }, settings.zoom);
 
-				// If the map switcher ui element is included, grab it for later.
-				var options = document.getElementById('map-ui');
+        // If the map base tileset switcher ui element is included, grab it for later.
+        var switcher = document.getElementById('map-switcher');
 
-				// If a base layer is requested, add it here before adding additional layers.
-				if (settings.base_layer !== '') {
-					mapbox.layer().url(settings.base_layer, function(layer) {
-						map.addLayer(layer);
-						addMultipleLayers();
-					});
-				} else {
-					// Otherwise, just add our standard layers stored as Link field values.
-					addMultipleLayers(); // @TODO - Test me.
-				}
+				// If the map tileset toggle ui element is included, grab it for later.
+				var options = document.getElementById('map-toggle');
 
-				// Helper function for adding our additional layers.
-				function addMultipleLayers() {
-					for (var i = 0; i < settings.tilesets.length; i++) {
-						addIndividualLayer(i);
+				// Load our base tileset layer(s), then add any optional layers.
+        // Mapbox.load() can accept a non-associative array of tileset layers.
+				var base_tileset_urls = [];
+				for (var i in settings.base_tilesets) {
+          base_tileset_urls[i] = settings.base_tilesets[i]['url'];
+        }
+        mapbox.load(base_tileset_urls, function(data) {
+          for (var i in data) {
+            map.addLayer(data[i]['layer']);
+          }
+        });
+
+				// Helper function for adding our optional layers.
+				function addOptionalLayers() {
+					for (var i = 0; i < settings.optional_tilesets.length; i++) {
+						addIndividualOptionalLayer(i);
 					}
 				}
 
-				// Helper function for adding a single layer to map.
-				// @TODO - Make compositing a configuration option.
-				function addIndividualLayer(num) {
+				// Helper function for adding a single optional layer to map.
+				function addIndividualOptionalLayer(num) {
 					var composite = true;
 					if (settings.composite == '0') {
 						composite = false;
 					}
-					mapbox.layer().composite(composite).url(settings.tilesets[num]['url'], function(layer) {
+					mapbox.layer().composite(composite).url(settings.optional_tilesets[num]['url'], function(layer) {
 						// If "toggleable layers enabled, show in a layer switcher."
 						// Based on tutorial at http://mapbox.com/mapbox.js/example/layers/
 						if (settings.layer_toggle == 1) {
@@ -61,7 +64,7 @@
 								option.href = '#';
 								option.id = layer.name;
 								option.className = 'active';
-								option.innerHTML = settings.tilesets[num]['title'];
+								option.innerHTML = settings.optional_tilesets[num]['title'];
 							option.onclick = function(e) {
 								e.preventDefault();
 								e.stopPropagation();

@@ -17,7 +17,6 @@ class MapboxjsPreset extends Entity {
     $fullscreen,
     $legend,
     $layer_toggle,
-    $base_layer,
     $composite,
     $type = 'mapboxjs_preset', // only one bundle type for now
     $created,

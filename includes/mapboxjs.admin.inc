@@ -27,6 +27,7 @@ function mapboxjs_preset_form($form, &$form_state, MapboxjsPreset $preset = NULL
     '#required' => TRUE,
     '#maxlength' => MAPBOXJS_PRESET_NAME_LENGTH,
     '#size' => 30,
+    '#weight' => -10,
   );
   $form['name'] = array(
     '#title' => t('Name'),
@@ -38,6 +39,14 @@ function mapboxjs_preset_form($form, &$form_state, MapboxjsPreset $preset = NULL
       'exists' => 'mapboxjs_get_presets',
       'source' => array('label')
     ),
+    '#weight' => -10,
+  );
+  // Enable/disable layer toggle control for optional layers.
+  $form['layer_toggle'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Provide layer toggle controls for optional layers'),
+    '#description' => t('Select this option to present controls to toggle on/off the optional tileset layers provided above.'),
+    '#default_value' => isset($preset->layer_toggle) ? $preset->layer_toggle : FALSE,
   );
   // Provide preset administrator with control over the map container height.
   $form['height'] = array(
@@ -54,7 +63,7 @@ function mapboxjs_preset_form($form, &$form_state, MapboxjsPreset $preset = NULL
     '#type' => 'fieldset',
     '#title' => t('Center point'),
     '#description' => t('Enter the lat/long center point of this map in decimal degrees.'),
-    '#collapsible' => FALSE,
+    '#collapsible' => TRUE,
   );
   $form['center']['lat'] = array(
     '#type' => 'textfield',
@@ -92,21 +101,6 @@ function mapboxjs_preset_form($form, &$form_state, MapboxjsPreset $preset = NULL
     '#title' => t('Provide a map legend, if included with MapBox tileset(s).'),
     '#default_value' => isset($preset->legend) ? $preset->legend : FALSE,
   );
-  // Enable/disable layer toggle control.
-  $form['layer_toggle'] = array(
-    '#type' => 'checkbox',
-    '#title' => t('Provide layer toggle controls'),
-    '#description' => t('Select this option to present a layer switcher to toggle on/off the tileset layers provided above.'),
-    '#default_value' => isset($preset->layer_toggle) ? $preset->layer_toggle : FALSE,
-  );
-  // Add an optional base tileset layer.
-  $form['base_layer'] = array(
-    '#type' => 'textfield',
-    '#title' => t('Base tileset'),
-    '#description' => t('Optionally, you can enter the URL of a base tileset, such as a terrain layer. This layer must support the <a href="https://github.com/mapbox/tilejson-spec">TileJSON</a> format.'),
-    '#default_value' => isset($preset->base_layer) ? $preset->base_layer : '',
-    '#element_validate' => array('mapboxjs_base_layer_validate'),
-  );
   // Enable/disable tileset compositing.
   $form['composite'] = array(
     '#type' => 'checkbox',
@@ -115,7 +109,7 @@ function mapboxjs_preset_form($form, &$form_state, MapboxjsPreset $preset = NULL
     '#default_value' => isset($preset->composite) ? $preset->composite : TRUE,
   );
 
-  // Attach our locked link field.
+  // Attach our locked link fields.
   field_attach_form('mapboxjs_preset', $preset, $form, $form_state);
 
   $form['actions'] = array('#type' => 'actions');

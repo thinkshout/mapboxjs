@@ -64,6 +64,13 @@ function mapboxjs_schema() {
         'default' => 1,
         'size' => 'tiny',
       ),
+      'layer_toggle' => array(
+        'description' => 'Boolean determining if toggle controls for optional tilesets should be displayed.',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 1,
+        'size' => 'tiny',
+      ),
       'fullscreen' => array(
         'description' => 'Boolean determining if the fullscreen control should be displayed.',
         'type' => 'int',
@@ -77,20 +84,6 @@ function mapboxjs_schema() {
         'not null' => TRUE,
         'default' => 0,
         'size' => 'tiny',
-      ),
-      'layer_toggle' => array(
-        'description' => 'Boolean determining if layers should be toggleable in the display.',
-        'type' => 'int',
-        'not null' => TRUE,
-        'default' => 1,
-        'size' => 'tiny',
-      ),
-      'base_layer' => array(
-        'description' => 'Optional base map tileset to be displayed under additional layers.',
-        'type' => 'varchar',
-        'default' => '',
-        'length' => 2048,
-        'not null' => FALSE,
       ),
       'composite' => array(
         'description' => 'Boolean determining if tile compositing should be used.',
@@ -149,7 +142,8 @@ function mapboxjs_schema() {
  */
 function mapboxjs_install() {
   // Add a locked Link field to our MapBox.js custom entity bundle.
-  $field_config = array(
+  // Provides storage for our base tileset(s).
+  $base_tilesets_config = array(
     'translatable' => '0',
     'entity_types' => array(),
     'settings' => array(
@@ -159,7 +153,7 @@ function mapboxjs_install() {
         'rel' => '',
       ),
       'url' => 0,
-      'title' => 'optional',
+      'title' => 'required',
       'title_value' => '',
       'title_maxlength' => 128,
       'enable_tokens' => 1,
@@ -169,7 +163,7 @@ function mapboxjs_install() {
     ),
     'foreign keys' => array(),
     'indexes' => array(),
-    'field_name' => 'field_tileset_urls',
+    'field_name' => 'field_base_tilesets',
     'type' => 'link_field',
     'module' => 'link',
     'active' => '1',
@@ -177,8 +171,84 @@ function mapboxjs_install() {
     'cardinality' => '-1',
     'deleted' => '0',
   );
-  $field_instance = array(
-    'label' => 'Tileset URLs',
+  $base_tilesets_instance = array(
+    'label' => 'Base tileset(s)',
+    'widget' => array(
+      'weight' => '-1',
+      'type' => 'link_field',
+      'module' => 'link',
+      'active' => 0,
+      'settings' => array(),
+    ),
+    'settings' => array(
+      'validate_url' => 1,
+      'url' => 0,
+      'title' => 'required',
+      'title_value' => '',
+      'title_maxlength' => '128',
+      'enable_tokens' => 1,
+      'display' => array(
+        'url_cutoff' => '80',
+      ),
+      'attributes' => array(
+        'target' => 'default',
+        'rel' => '',
+        'class' => '',
+        'configurable_title' => 0,
+        'title' => '',
+      ),
+      'user_register_form' => FALSE,
+    ),
+    'display' => array(
+      'default' => array(
+        'label' => 'hidden',
+        'type' => 'hidden',
+        'weight' => '0',
+        'settings' => array(),
+      ),
+    ),
+    'required' => 1,
+    'description' => 'Please enter the full URL of a <a href="http://mapbox.com">MapBox</a> tileset to be added to this map as a base layer. This URL should be in the TileJSON file format, like http://a.tiles.mapbox.com/v3/tmcw.map-hehqnmda.jsonp. The "title" you enter for this URL will be used in the map\'s tile switcher.',
+    'default_value' => NULL,
+    'field_name' => 'field_base_tilesets',
+    'entity_type' => 'mapboxjs_preset',
+    'bundle' => 'mapboxjs_preset',
+    'deleted' => '0',
+  );
+  field_create_field($base_tilesets_config);
+  field_create_instance($base_tilesets_instance);
+  // Add a locked Link field to our MapBox.js custom entity bundle.
+  // Provides storage for optional tilesets place on top of base tileset(s).
+  $optional_tilesets_config = array(
+    'translatable' => '0',
+    'entity_types' => array(),
+    'settings' => array(
+      'attributes' => array(
+        'target' => 'default',
+        'class' => '',
+        'rel' => '',
+      ),
+      'url' => 0,
+      'title' => 'required',
+      'title_value' => '',
+      'title_maxlength' => 128,
+      'enable_tokens' => 1,
+      'display' => array(
+        'url_cutoff' => 80,
+      ),
+    ),
+    'foreign keys' => array(),
+    'indexes' => array(),
+    'field_name' => 'field_optional_tilesets',
+    'type' => 'link_field',
+    'module' => 'link',
+    'active' => '1',
+    'locked' => '1',
+    'cardinality' => '-1',
+    'deleted' => '0',
+  );
+  $optional_tilesets_instance = array(
+    'label' => 'Optional tileset(s)',
     'widget' => array(
       'weight' => '0',
       'type' => 'link_field',
@@ -213,16 +283,16 @@ function mapboxjs_install() {
         'settings' => array(),
       ),
     ),
-    'required' => 1,
-    'description' => 'Please enter the full URL of a <a href="http://mapbox.com">MapBox</a> tileset to be added to this map. This URL should be in the TileJSON file format, like http://a.tiles.mapbox.com/v3/tmcw.map-hehqnmda.jsonp. The "title" you enter for this URL will be used in the map\'s tile switcher.',
+    'required' => 0,
+    'description' => 'Please enter the full URL of a <a href="http://mapbox.com">MapBox</a> tileset to be added to this map on top of the base tileset layers. This URL should be in the TileJSON file format, like http://a.tiles.mapbox.com/v3/tmcw.map-hehqnmda.jsonp. The "title" you enter for this URL will be used in the map\'s toggle controls for optional tileset layers, if the controls are enabled.',
     'default_value' => NULL,
-    'field_name' => 'field_tileset_urls',
+    'field_name' => 'field_optional_tilesets',
     'entity_type' => 'mapboxjs_preset',
     'bundle' => 'mapboxjs_preset',
     'deleted' => '0',
   );
-  field_create_field($field_config);
-  field_create_instance($field_instance);
+  field_create_field($optional_tilesets_config);
+  field_create_instance($optional_tilesets_instance);
 }
 
 /**
@@ -246,5 +316,6 @@ function mapboxjs_field_schema($field) {
  */
 function mapboxjs_uninstall() {
   // Delete locked fields when uninstalling module.
-  field_delete_instance('field_tileset_urls', TRUE);
+  field_delete_instance('field_base_tilesets', TRUE);
+  field_delete_instance('field_optional_tilesets', TRUE);
 }
