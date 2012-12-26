@@ -37,9 +37,18 @@
           base_tileset_urls[i] = settings.base_tilesets[i]['url'];
         }
         mapbox.load(base_tileset_urls, function(data) {
+          map.addLayer(data[0]['layer']);
           for (var i in data) {
-            map.addLayer(data[i]['layer']);
+            // If there is more than one base tileset, add click events.
+            if (data.length > 1) {
+              document.getElementById('base-tile-' + i).onclick = function(e) {
+                this.className = 'active';
+                //map.addLayer(data[e]['layer']);
+                return false;
+              };
+            }
           }
+          addOptionalLayers();
         });
 
 				// Helper function for adding our optional layers.
