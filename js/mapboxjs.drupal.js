@@ -5,6 +5,8 @@
 
 			$(settings.mapboxjs).each(function() {
 
+        // @TODO - Support multiple MapBox maps on the same page.
+
 				// Load a settings object with all of our map settings.
 				var settings = {};
 				for (var setting in this.configuration) {
@@ -44,11 +46,13 @@
               document.getElementById('base-tile-' + i).onclick = function(e) {
                 this.className = 'active';
                 //map.addLayer(data[e]['layer']);
+                // @FIXME - Not sure how to handle turning on/off multiple base tilesets.
+                // See example at: http://mapbox.com/mapbox.js/example/simple-filtering/.
                 return false;
               };
             }
           }
-          addOptionalLayers();
+          addOptionalLayers(); //FIXME - Working in Alpha1 release, but not here.
         });
 
 				// Helper function for adding our optional layers.

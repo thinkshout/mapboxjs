@@ -157,6 +157,7 @@ function mapboxjs_preset_form_validate($form, &$form_state) {
   $preset = $form_state['mapboxjs_preset'];
   field_attach_form_validate('mapboxjs_preset', $preset, $form, $form_state);
   // @FIXME - For some reason, link field URL is not getting validated.
+  // @TODO - Consider custom validation to check for .jsonp URL extension.
 }
 
 /**

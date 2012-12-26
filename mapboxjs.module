@@ -5,11 +5,14 @@ module_load_include('inc', 'mapboxjs', 'includes/mapboxjs.field');
 
 /**
  * Implements hook_requirements().
+ *
+ * @TODO - Rather than grabbing mapbox.js and mapbox.css directly, checkout project from GitHub
+ *   at: https://github.com/mapbox/mapbox.js/tree/v0.6.7. Would then need to update mapboxjs.make.example.
  */
 function mapboxjs_requirements($phase) {
   $requirements = array();
 
-  // ensure js library is available
+  // Ensure js library is available
   if ($phase == 'runtime' && !file_exists(libraries_get_path('mapboxjs') . '/mapbox.js')) {
     $requirements['mapboxjss'] = array(
       'title' => t('MapBox.js library not found'),
@@ -22,7 +25,7 @@ function mapboxjs_requirements($phase) {
       'severity' => REQUIREMENT_ERROR,
     );
   }
-    // ensure MapBox css file is available
+    // Ensure MapBox css file is available
   if ($phase == 'runtime' && !file_exists(libraries_get_path('mapboxjs') . '/mapbox.css')) {
     $requirements['mapboxjs'] = array(
       'title' => t('MapBox css not found'),
@@ -162,6 +165,8 @@ function mapboxjs_render_preset($preset) {
   $map = array();
 
   $map_id = 'map-' . $preset->name;
+  // @TODO - Provide unique ID for each MapBox map so that we can act on multiple maps on a single page.
+
   // Grab our required base tileset(s).
   $base_tileset_items = field_get_items('mapboxjs_preset', $preset, 'field_base_tilesets');
   $base_tilesets = array();

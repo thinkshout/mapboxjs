@@ -58,7 +58,6 @@ function mapboxjs_field_widget_info() {
  * Implements hook_field_widget_form().
  */
 function mapboxjs_field_widget_form(&$form, &$form_state, $field, $instance, $langcode, $items, $delta, $element) {
-  // @TODO - Test for field settings that do not provide default value.
   switch ($instance['widget']['type']) {
     case 'mapboxjs_select':
       $options = array('' => t('-- No map selected --'));
