@@ -1,6 +1,5 @@
 <?php
 
-// @TODO - Can this include be called from mapboxjs.info?
 module_load_include('inc', 'mapboxjs', 'includes/mapboxjs.field');
 
 /**
@@ -25,7 +24,7 @@ function mapboxjs_requirements($phase) {
       'severity' => REQUIREMENT_ERROR,
     );
   }
-    // Ensure MapBox css file is available
+  // Ensure MapBox css file is available
   if ($phase == 'runtime' && !file_exists(libraries_get_path('mapboxjs') . '/mapbox.css')) {
     $requirements['mapboxjs'] = array(
       'title' => t('MapBox css not found'),
@@ -170,32 +169,36 @@ function mapboxjs_render_preset($preset) {
   // Grab our required base tileset(s).
   $base_tileset_items = field_get_items('mapboxjs_preset', $preset, 'field_base_tilesets');
   $base_tilesets = array();
-  foreach($base_tileset_items as $item) {
+  foreach ($base_tileset_items as $item) {
     $base_tilesets[] = array('title' => $item['title'], 'url' => $item['url']);
   }
   // Grab our optional tilesets to be laid on top of base tileset(s).
   $optional_tileset_items = field_get_items('mapboxjs_preset', $preset, 'field_optional_tilesets');
   if (!empty($optional_tileset_items)) {
     $optional_tilesets = array();
-    foreach($optional_tileset_items as $item) {
-      $optional_tilesets[] = array('title' => $item['title'], 'url' => $item['url']);
+    foreach ($optional_tileset_items as $item) {
+      $optional_tilesets[] = array(
+        'title' => $item['title'],
+        'url' => $item['url']
+      );
     }
   }
 
   $settings = array(
-  'mapID' => $map_id,
-  'configuration' => array(
-    'lat' => $preset->lat,
-    'lon' => $preset->lon,
-    'zoom' => $preset->zoom,
-    'zoomer' => $preset->zoomer,
-    'fullscreen' => $preset->fullscreen,
-    'legend' => $preset->legend,
-    'layer_toggle' => $preset->layer_toggle,
-    'composite' => $preset->composite,
-    'base_tilesets' => $base_tilesets,
-    'optional_tilesets' => $base_tilesets,
-  ));
+    'mapID' => $map_id,
+    'configuration' => array(
+      'lat' => $preset->lat,
+      'lon' => $preset->lon,
+      'zoom' => $preset->zoom,
+      'zoomer' => $preset->zoomer,
+      'fullscreen' => $preset->fullscreen,
+      'legend' => $preset->legend,
+      'layer_toggle' => $preset->layer_toggle,
+      'composite' => $preset->composite,
+      'base_tilesets' => $base_tilesets,
+      'optional_tilesets' => $base_tilesets,
+    )
+  );
   // Pass our settings to Drupal's global js variable.
   drupal_add_js(array('mapboxjs' => $settings), 'setting');
 
@@ -205,7 +208,7 @@ function mapboxjs_render_preset($preset) {
   if (count($base_tilesets) > 1) {
     $switcher = '';
     // @TODO - Generate markup using renderable array.
-    foreach($base_tilesets as $key => $tileset) {
+    foreach ($base_tilesets as $key => $tileset) {
       $switcher .= "<li><a href='#' id='base-tile-" . $key . "'>" . $tileset['title'] . "</a></li>";
     }
     $switcher = "<div id='map-switcher'><ul>" . $switcher . "</ul></div>";
@@ -229,7 +232,11 @@ function mapboxjs_render_preset($preset) {
 function mapboxjs_theme($existing, $type, $theme, $path) {
   return array(
     'mapboxjs_map' => array(
-      'arguments' => array('map_id' => NULL, 'height' => '400px', 'extras' => ''),
+      'arguments' => array(
+        'map_id' => NULL,
+        'height' => '400px',
+        'extras' => ''
+      ),
       'template' => 'mapboxjs_map',
     ),
   );
@@ -250,5 +257,9 @@ function mapboxjs_theme($existing, $type, $theme, $path) {
 function mapboxjs_render_map($map_id = 'mapboxjs-map', $height = '400px', $extras = NULL) {
   // Add javascript and css dependencies.
   drupal_add_library('mapboxjs', 'mapboxjs');
-  return theme('mapboxjs_map', array('map_id' => $map_id, 'height' => $height, 'extras' => $extras));
+  return theme('mapboxjs_map', array(
+    'map_id' => $map_id,
+    'height' => $height,
+    'extras' => $extras
+  ));
 }

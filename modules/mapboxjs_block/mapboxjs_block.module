@@ -9,8 +9,8 @@ function mapboxjs_block_block_info() {
   $blocks = array();
   foreach ($presets as $preset) {
     $blocks[$preset->name] = array(
-    'info' => t('MapBox map: @label', array('@label' => $preset->label)),
-    'cache' => DRUPAL_NO_CACHE
+      'info' => t('MapBox map: @label', array('@label' => $preset->label)),
+      'cache' => DRUPAL_NO_CACHE
     );
   }
 

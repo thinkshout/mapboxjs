@@ -12,7 +12,7 @@ define('MAPBOXJS_PRESET_NAME_LENGTH', 128);
  * @return mixed
  */
 function mapboxjs_preset_form($form, &$form_state, MapboxjsPreset $preset = NULL, $op = 'edit') {
-    if ($op == 'clone') {
+  if ($op == 'clone') {
     $preset->label .= ' (cloned)';
     $preset->name = '';
   }
@@ -132,6 +132,7 @@ function mapboxjs_preset_form($form, &$form_state, MapboxjsPreset $preset = NULL
 
 /**
  * Helper function to validate base tileset URL.
+ *
  * @TODO - Consider adding this validation to mapboxjs_preset_form_validate().
  */
 function mapboxjs_base_layer_validate($element, &$form_state, $form) {
@@ -147,10 +148,10 @@ function mapboxjs_preset_form_validate($form, &$form_state) {
   // Validate lat/lon values.
   $lat = $form_state['values']['lat'];
   $lon = $form_state['values']['lon'];
-  if (!empty($lat) & (!is_numeric($lat) || $lat > 90  || $lat < -90)) {
+  if (!empty($lat) & (!is_numeric($lat) || $lat > 90 || $lat < -90)) {
     form_set_error('lat', t('Enter the latitude of the center point as a decimal between -90 and 90.'));
   }
-  if (!empty($lon) & (!is_numeric($lon) || $lon > 180  || $lon < -180)) {
+  if (!empty($lon) & (!is_numeric($lon) || $lon > 180 || $lon < -180)) {
     form_set_error('lon', t('Enter the longitude of the center point as a decimal between -180 and 180.'));
   }
   // Call to field_attach_form_validate() ensures that locked link field is validated.

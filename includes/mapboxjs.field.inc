@@ -71,8 +71,8 @@ function mapboxjs_field_widget_form(&$form, &$form_state, $field, $instance, $la
         '#options' => $options,
         '#default_value' => isset($items[$delta]['value']) ? $items[$delta]['value'] : NULL,
       );
-    break;
-  };
+      break;
+  }
   return $element;
 }
 
