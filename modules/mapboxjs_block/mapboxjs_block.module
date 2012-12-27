@@ -9,7 +9,7 @@ function mapboxjs_block_block_info() {
   $blocks = array();
   foreach ($presets as $preset) {
     $blocks[$preset->name] = array(
-    'info' => t('MapBox map: ' . $preset->label),
+    'info' => t('MapBox map: @label', array('@label' => $preset->label)),
     'cache' => DRUPAL_NO_CACHE
     );
   }
@@ -24,7 +24,7 @@ function mapboxjs_block_block_view($delta = '') {
   $block = array();
 
   $preset = mapboxjs_get_presets($delta);
-  $block['subject'] = t($preset->label);
+  $block['subject'] = $preset->label;
   $block['content'] = mapboxjs_render_preset($preset);
 
   return $block;
