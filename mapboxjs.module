@@ -229,7 +229,7 @@ function mapboxjs_theme($existing, $type, $theme, $path) {
     'mapboxjs_map' => array(
       'arguments' => array(
         'map_id' => NULL,
-        'height' => '400px',
+        'height' => 400,
         'extras' => ''
       ),
       'template' => 'mapboxjs_map',
@@ -249,7 +249,7 @@ function mapboxjs_theme($existing, $type, $theme, $path) {
  *
  * @TODO - Provide some additional default map settings that can be overridden.
  */
-function mapboxjs_render_map($map_id = 'mapboxjs-map', $height = '400px', $extras = NULL) {
+function mapboxjs_render_map($map_id = 'mapboxjs-map', $height = 400, $extras = NULL) {
   // Add javascript and css dependencies.
   drupal_add_library('mapboxjs', 'mapboxjs');
   return theme('mapboxjs_map', array(
