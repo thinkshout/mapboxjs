@@ -26,6 +26,13 @@ function mapboxjs_schema() {
         'length' => 128,
         'not null' => TRUE,
       ),
+      'layers' => array(
+        'description' => 'MapBox JS map layers as a serialized array.',
+        'type' => 'text',
+        'not null' => FALSE,
+        'size' => 'big',
+        'serialize' => TRUE,
+       ),
       'settings' => array(
         'description' => 'MapBox JS map settings as a serialized array.',
         'type' => 'text',
