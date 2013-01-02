@@ -118,15 +118,6 @@ function mapboxjs_preset_form($form, &$form_state, MapboxjsPreset $preset = NULL
     '#type' => 'submit',
   );
 
-  // If map preset has been saved, display map preview below the form.
-  // @TODO - Add better handling for invalid map previews.
-  // @TODO - Add ajax-based preview that doesn't require saving the map preset.
-  if ($form_state['op'] == 'edit') {
-    $preview = mapboxjs_render_preset($form_state['mapboxjs_preset']);
-    $preview['#prefix'] = '<h3>MapBox map preset preview</h3>';
-    $form['#suffix'] = drupal_render($preview);
-  }
-
   return $form;
 }
 
