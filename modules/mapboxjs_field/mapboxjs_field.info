@@ -1,0 +1,5 @@
+name = MapBox.JS field
+description = Provides a field for rendering MapBox.js maps.
+core = 7.x
+
+dependencies[] = mapboxjs

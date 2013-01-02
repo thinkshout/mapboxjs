@@ -8,7 +8,7 @@
 /**
  * Implements hook_field_info().
  */
-function mapboxjs_field_info() {
+function mapboxjs_field_field_info() {
   return array(
     'mapboxjs_preset' => array(
       'label' => t('MapBox.js map preset'),
@@ -25,14 +25,14 @@ function mapboxjs_field_info() {
 /**
  * Implements hook_field_instance_settings_form().
  */
-function mapboxjs_field_instance_settings_form($field, $instance) {
+function mapboxjs_field_field_instance_settings_form($field, $instance) {
 
 }
 
 /**
  * Implements hook_field_is_empty().
  */
-function mapboxjs_field_is_empty($item, $field) {
+function mapboxjs_field_field_is_empty($item, $field) {
 
 }
 
@@ -40,7 +40,7 @@ function mapboxjs_field_is_empty($item, $field) {
 /**
  * Implements hook_field_widget_info().
  */
-function mapboxjs_field_widget_info() {
+function mapboxjs_field_field_widget_info() {
   return array(
     'mapboxjs_select' => array(
       'label' => t('MapBox.js map preset'),
@@ -57,7 +57,7 @@ function mapboxjs_field_widget_info() {
 /**
  * Implements hook_field_widget_form().
  */
-function mapboxjs_field_widget_form(&$form, &$form_state, $field, $instance, $langcode, $items, $delta, $element) {
+function mapboxjs_field_field_widget_form(&$form, &$form_state, $field, $instance, $langcode, $items, $delta, $element) {
   switch ($instance['widget']['type']) {
     case 'mapboxjs_select':
       $options = array('' => t('-- No map selected --'));
@@ -79,7 +79,7 @@ function mapboxjs_field_widget_form(&$form, &$form_state, $field, $instance, $la
 /**
  * Implements hook_field_formatter_info().
  */
-function mapboxjs_field_formatter_info() {
+function mapboxjs_field_field_formatter_info() {
   return array(
     'mapboxjs_preset_default' => array(
       'label' => t('Default'),
@@ -91,7 +91,7 @@ function mapboxjs_field_formatter_info() {
 /**
  * Implements hook_field_formatter_view().
  */
-function mapboxjs_field_formatter_view($entity_type, $entity, $field, $instance, $langcode, $items, $display) {
+function mapboxjs_field_field_formatter_view($entity_type, $entity, $field, $instance, $langcode, $items, $display) {
 
   $element = array();
   // Iterate through field values and load mapboxjs map presets.

@@ -1,7 +1,5 @@
 <?php
 
-module_load_include('inc', 'mapboxjs', 'includes/mapboxjs.field');
-
 /**
  * Implements hook_requirements().
  *
