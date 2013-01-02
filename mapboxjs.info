@@ -5,5 +5,6 @@ core = 7.x
 dependencies[] = libraries
 
 files[] = includes/mapboxjs.entity.inc
+files[] = includes/mapboxjs.ui_controller.inc
 
 configure = admin/structure/mapboxjs/presets

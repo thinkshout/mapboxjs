@@ -129,6 +129,7 @@ function mapboxjs_entity_info() {
         'path' => 'admin/structure/mapboxjs/presets',
         'file' => 'mapboxjs.admin.inc',
         'file path' => drupal_get_path('module', 'mapboxjs') . '/includes',
+        'controller class' => 'MapboxjsPresetUIController',
       ),
       'access callback' => 'mapboxjs_access',
       'label callback' => 'entity_class_label',
