@@ -35,7 +35,7 @@ class MapboxjsPreset extends Entity {
   }
 
   protected function defaultUri() {
-    return array('path' => 'admin/structure/mapboxjs/presets/manage/' . $this->identifier());
+    return array('path' => 'mapboxjs/' . $this->identifier());
   }
 
 }
