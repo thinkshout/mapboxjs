@@ -121,9 +121,6 @@ function mapboxjs_entity_info() {
         'name' => 'name',
         'label' => 'label'
       ),
-      'bundle keys' => array(
-        'bundle' => 'type',
-      ),
       'bundles' => array(
         'mapboxjs_preset' => array(
           'label' => 'Mapbox.js map preset',

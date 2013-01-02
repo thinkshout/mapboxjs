@@ -26,13 +26,6 @@ function mapboxjs_schema() {
         'length' => 128,
         'not null' => TRUE,
       ),
-      'type' => array(
-        'description' => 'The type/bundle of this mapboxjs_preset.',
-        'type' => 'varchar',
-        'length' => 32,
-        'not null' => TRUE,
-        'default' => '',
-      ),
       'height' => array(
         'description' => 'The default height of a map rendered by MapBox.js.',
         'type' => 'int',
