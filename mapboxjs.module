@@ -222,6 +222,10 @@ function mapboxjs_theme($existing, $type, $theme, $path) {
       ),
       'template' => 'mapboxjs_map',
     ),
+    'mapboxjs_preset_form_table' => array(
+      'render element' => 'elements',
+      'file' => 'includes/mapboxjs.admin.inc',
+    ),
   );
 }
 

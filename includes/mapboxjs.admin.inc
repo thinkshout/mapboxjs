@@ -187,3 +187,39 @@ function mapboxjs_preset_form_submit($form, &$form_state) {
 
   drupal_set_message(t('MapBox.js map preset saved.'));
 }
+
+/**
+ *
+ * @ingroup themeable
+ */
+function theme_mapboxjs_preset_form_table($variables) {
+  drupal_add_tabledrag('mapboxjs-preset-layers-table', 'order', 'sibling', 'layer-weight');
+  $elements = $variables['elements'];
+
+  $header = array(
+    t('Label'),
+    t('Tile URL'),
+    t('Weight')
+  );
+
+  // Build the rows array.
+  $rows = array();
+  foreach (element_children($elements) as $child_key) {
+    $child = & $elements[$child_key];
+    $child['weight']['#attributes']['class'] = array('layer-weight');
+    $rows[] = array(
+      'data' => array(
+        drupal_render($child['label']),
+        drupal_render($child['url']),
+        drupal_render($child['weight']),
+      ),
+      'class' => array('draggable'),
+    );
+  }
+
+  return theme('table', array(
+    'header' => $header,
+    'rows' => $rows,
+    'attributes' => array('id' => 'mapboxjs-preset-layers-table'),
+  ));
+}
