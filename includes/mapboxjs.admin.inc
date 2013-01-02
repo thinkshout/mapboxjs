@@ -117,8 +117,60 @@ function mapboxjs_preset_form($form, &$form_state, MapboxjsPreset $preset = NULL
     '#default_value' => isset($preset) ? $preset->settings['composite'] : TRUE,
   );
 
-  // Attach our locked link fields.
-  field_attach_form('mapboxjs_preset', $preset, $form, $form_state);
+  $form['layers_wrapper'] = array(
+    '#title' => t('Map layers'),
+    '#type' => 'fieldset',
+    '#description' => t(''),
+    '#collapsible' => TRUE,
+    '#description' => t('Please enter the full URL of a MapBox tileset to be added to this map. This URL should be in the TileJSON file format, like http://a.tiles.mapbox.com/v3/tmcw.map-hehqnmda.jsonp. The label is used in the map\'s layer switcher.'),
+    '#attributes' => array('id' => 'mapboxjs-layer-wrapper')
+  );
+  
+  $form['layers_wrapper']['layers'] = array(
+    '#theme' => 'mapboxjs_preset_form_table',
+    '#tree' => TRUE,
+    '#theme_wrappers' => array('fieldset'),
+  );
+
+  $layers = array(array('weight' => 0, 'url' => ''));
+  if (!empty($form_state['values']['layers'])) {
+    $layers = $form_state['values']['layers'];
+  }
+  else if (!empty($preset->layers)) {
+    $layers = $preset->layers;
+  }
+
+  if ((isset($form_state['triggering_element']) && $form_state['triggering_element']['#name'] == 'mapboxjs_add_layer')) {
+    $layers[] = array(array('weight' => 0, 'url' => ''));
+  }
+
+  foreach ($layers as $delta => $layer) {
+    $form['layers_wrapper']['layers'][$delta] = array(
+      'label' => array(
+        '#type' => 'textfield',
+        '#default_value' => $layer['label'],
+      ),
+      'url' => array(
+        '#type' => 'textfield',
+        '#default_value' => $layer['url'],
+      ),
+      'weight' => array(
+        '#type' => 'weight',
+        '#delta' => 30,
+        '#default_value' => $layer['weight'],
+      )
+    );
+  }
+  $form['mapboxjs_add_layer'] = array(
+    '#value' => t('Add layer'),
+    '#type' => 'button',
+    '#ajax' => array(
+      'callback' => 'mapboxjs_preset_form_callback',
+      'wrapper' => 'mapboxjs-layer-wrapper'
+    ),
+    '#name' => 'mapboxjs_add_layer',
+  );
+
 
   $form['actions'] = array('#type' => 'actions');
   $form['actions']['submit'] = array(
@@ -127,6 +179,10 @@ function mapboxjs_preset_form($form, &$form_state, MapboxjsPreset $preset = NULL
   );
 
   return $form;
+}
+
+function mapboxjs_preset_form_callback($form, $form_state) {
+  return $form['layers_wrapper'];
 }
 
 /**
@@ -145,19 +201,21 @@ function mapboxjs_base_layer_validate($element, &$form_state, $form) {
  */
 function mapboxjs_preset_form_validate($form, &$form_state) {
   // Validate lat/lon values.
-  $lat = $form_state['values']['lat'];
-  $lon = $form_state['values']['lon'];
+  $lat = $form_state['values']['settings']['center']['lat'];
+  $lon = $form_state['values']['settings']['center']['lon'];
   if (!empty($lat) & (!is_numeric($lat) || $lat > 90 || $lat < -90)) {
     form_set_error('lat', t('Enter the latitude of the center point as a decimal between -90 and 90.'));
   }
   if (!empty($lon) & (!is_numeric($lon) || $lon > 180 || $lon < -180)) {
     form_set_error('lon', t('Enter the longitude of the center point as a decimal between -180 and 180.'));
   }
-  // Call to field_attach_form_validate() ensures that locked link field is validated.
-  $preset = $form_state['mapboxjs_preset'];
-  field_attach_form_validate('mapboxjs_preset', $preset, $form, $form_state);
-  // @FIXME - For some reason, link field URL is not getting validated.
-  // @TODO - Consider custom validation to check for .jsonp URL extension.
+
+  // validate layer URLs
+  foreach ($form_state['values']['layers'] as $key => $layer) {
+    if (!empty($layer['url']) && !valid_url($layer['url'], TRUE)) {
+      form_set_error("layers][{$key}][url", t('Map layer URL is invalid.'));
+    }
+  }
 }
 
 /**
@@ -167,28 +225,27 @@ function mapboxjs_preset_form_validate($form, &$form_state) {
  * @param $form_state
  */
 function mapboxjs_preset_form_submit($form, &$form_state) {
-
   $values = $form_state['values'];
-
-  if ($form_state['mapboxjs_preset']->name) {
-    $preset = $form_state['mapboxjs_preset'];
-    foreach ($values as $key => $value) {
-      $preset->{$key} = $value;
-    }
-  }
-  else {
+  $preset = $form_state['mapboxjs_preset'];
+  if (empty($preset->name)) {
     $preset = entity_create('mapboxjs_preset', $values);
   }
 
-  // Make sure that attached link field is saved with our custom entity.
-  field_attach_submit('mapboxjs_preset', $preset, $form, $form_state);
+  $preset->label = $values['label'];
+  $preset->name = $values['name'];
+  foreach ($values['settings'] as $key => $value) {
+    $preset->settings[$key] = $value;
+  }
+  $preset->layeres = $values['layers'];
 
   $preset->save();
 
+  $form_state['redirect'] = array('admin/structure/mapboxjs/presets/manage');
   drupal_set_message(t('MapBox.js map preset saved.'));
 }
 
 /**
+ * Returns the rendered tabledrag form for the map layer listing.
  *
  * @ingroup themeable
  */
