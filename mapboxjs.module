@@ -113,7 +113,7 @@ function mapboxjs_entity_info() {
       'entity class' => 'MapboxjsPreset',
       'base table' => 'mapboxjs_preset',
       'uri callback' => 'entity_class_uri',
-      'fieldable' => TRUE,
+      'fieldable' => FALSE,
       'exportable' => TRUE,
       'module' => 'mapboxjs',
       'entity keys' => array(
