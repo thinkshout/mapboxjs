@@ -9,6 +9,7 @@ class MapboxjsPreset extends Entity {
     $mapboxjs_preset_id,
     $name,
     $label,
+    $layers,
     $settings,
     $created,
     $updated;
