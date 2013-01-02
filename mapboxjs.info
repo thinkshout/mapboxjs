@@ -3,7 +3,6 @@ description = Integration with the MapBox.js map scripting library.
 core = 7.x
 
 dependencies[] = libraries
-dependencies[] = link
 
 files[] = includes/mapboxjs.entity.inc
 
