@@ -41,72 +41,80 @@ function mapboxjs_preset_form($form, &$form_state, MapboxjsPreset $preset = NULL
     ),
     '#weight' => -10,
   );
+
+  $form['settings'] = array(
+    '#title' => t('Settings'),
+    '#type' => 'container',
+    '#description' => t(''),
+    '#tree' => TRUE
+  );
+
   // Enable/disable layer toggle control for optional layers.
-  $form['layer_toggle'] = array(
+  $form['settings']['layer_toggle'] = array(
     '#type' => 'checkbox',
     '#title' => t('Provide layer toggle controls for optional layers'),
     '#description' => t('Select this option to present controls to toggle on/off the optional tileset layers provided above.'),
-    '#default_value' => isset($preset->layer_toggle) ? $preset->layer_toggle : FALSE,
+    '#default_value' => isset($preset) ? $preset->settings['layer_toggle'] : FALSE,
   );
   // Provide preset administrator with control over the map container height.
-  $form['height'] = array(
+  $form['settings']['height'] = array(
     '#type' => 'textfield',
     '#title' => t('Mabox map height'),
     '#description' => t('Enter the height in pixels for this map.'),
-    '#default_value' => isset($preset->height) ? $preset->height : '500',
+    '#default_value' => isset($preset) ? $preset->settings['height'] : '500',
     '#size' => '5',
     '#field_suffix' => t('px'),
     '#element_validate' => array('element_validate_integer_positive'),
   );
   // Set the lat/lon center points.
-  $form['center'] = array(
+  $form['settings']['center'] = array(
     '#type' => 'fieldset',
     '#title' => t('Center point'),
     '#description' => t('Enter the lat/long center point of this map in decimal degrees.'),
     '#collapsible' => TRUE,
   );
-  $form['center']['lat'] = array(
+  $form['settings']['center']['lat'] = array(
     '#type' => 'textfield',
     '#title' => t('Latitude'),
-    '#default_value' => isset($preset->lat) ? $preset->lat : 0,
+    '#default_value' => isset($preset) ? $preset->settings['center']['lat'] : 0,
   );
-  $form['center']['lon'] = array(
+  $form['settings']['center']['lon'] = array(
     '#type' => 'textfield',
     '#title' => t('Longitude'),
-    '#default_value' => isset($preset->lon) ? $preset->lon : 0,
+    '#default_value' => isset($preset) ? $preset->settings['center']['lon'] : 0,
   );
   // Set default zoom level.
-  $form['zoom'] = array(
+  $form['settings']['zoom'] = array(
     '#type' => 'select',
     '#title' => t('Zoom level'),
     '#description' => t('Select the default zoom level for this map.'),
     '#options' => drupal_map_assoc(array(0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20)),
-    '#default_value' => isset($preset->zoom) ? $preset->zoom : 8,
+    '#default_value' => isset($preset) ? $preset->settings['zoom'] : 8,
   );
   // Enable/disable zoom controls.
-  $form['zoomer'] = array(
+  $form['settings']['zoomer'] = array(
     '#type' => 'checkbox',
     '#title' => t('Provide zoom controls'),
-    '#default_value' => isset($preset->zoomer) ? $preset->zoomer : TRUE,
+    '#default_value' => isset($preset) ? $preset->settings['zoomer'] : TRUE,
   );
   // Enable/disable fullscreen control.
-  $form['fullscreen'] = array(
+  $form['settings']['fullscreen'] = array(
     '#type' => 'checkbox',
     '#title' => t('Provide fullscreen map option'),
-    '#default_value' => isset($preset->fullscreen) ? $preset->fullscreen : FALSE,
+    '#default_value' => isset($preset) ? $preset->settings['fullscreen'] : FALSE,
   );
   // Enable/disable map legend.
-  $form['legend'] = array(
+  $form['settings']['legend'] = array(
     '#type' => 'checkbox',
     '#title' => t('Provide a map legend, if included with MapBox tileset(s).'),
-    '#default_value' => isset($preset->legend) ? $preset->legend : FALSE,
+    '#default_value' => isset($preset) ? $preset->settings['legend'] : FALSE,
   );
   // Enable/disable tileset compositing.
-  $form['composite'] = array(
+  $form['settings']['composite'] = array(
     '#type' => 'checkbox',
     '#title' => t('Enable tileset compositing'),
     '#description' => t('By default, multiple tilesets will be returned by the MapBox API as a single, composited tileset. This improves performance and reduces the number of tile requests to the MapBox API. In certain cases, however, it is helpful to disable compositing for smoother transitions when toggling on/off one or more tilesets.'),
-    '#default_value' => isset($preset->composite) ? $preset->composite : TRUE,
+    '#default_value' => isset($preset) ? $preset->settings['composite'] : TRUE,
   );
 
   // Attach our locked link fields.

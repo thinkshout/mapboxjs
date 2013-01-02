@@ -9,16 +9,7 @@ class MapboxjsPreset extends Entity {
     $mapboxjs_preset_id,
     $name,
     $label,
-    $height,
-    $lat,
-    $lon,
-    $zoom,
-    $zoomer,
-    $fullscreen,
-    $legend,
-    $layer_toggle,
-    $composite,
-    $type = 'mapboxjs_preset', // only one bundle type for now
+    $settings,
     $created,
     $updated;
 
@@ -35,7 +26,7 @@ class MapboxjsPreset extends Entity {
   }
 
   protected function defaultUri() {
-    return array('path' => 'mapboxjs/' . $this->identifier());
+    return array('path' => 'admin/structure/mapboxjs/presets/manage/' . $this->identifier());
   }
 
 }
