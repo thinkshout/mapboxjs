@@ -128,11 +128,10 @@ function mapboxjs_preset_form($form, &$form_state, MapboxjsPreset $preset = NULL
   
   $form['layers_wrapper']['layers'] = array(
     '#theme' => 'mapboxjs_preset_form_table',
-    '#tree' => TRUE,
-    '#theme_wrappers' => array('fieldset'),
+    '#tree' => TRUE
   );
 
-  $layers = array(array('weight' => 0, 'url' => ''));
+  $layers = array(array('weight' => 0, 'url' => '', 'label' => ''));
   if (!empty($form_state['values']['layers'])) {
     $layers = $form_state['values']['layers'];
   }
@@ -141,7 +140,7 @@ function mapboxjs_preset_form($form, &$form_state, MapboxjsPreset $preset = NULL
   }
 
   if ((isset($form_state['triggering_element']) && $form_state['triggering_element']['#name'] == 'mapboxjs_add_layer')) {
-    $layers[] = array(array('weight' => 0, 'url' => ''));
+    $layers[] = array('weight' => 0, 'url' => '', 'label' => '');
   }
 
   foreach ($layers as $delta => $layer) {
