@@ -133,6 +133,7 @@ function mapboxjs_entity_info() {
         'file path' => drupal_get_path('module', 'mapboxjs') . '/includes',
       ),
       'access callback' => 'mapboxjs_access',
+      'label callback' => 'entity_class_label',
     ),
   );
 
