@@ -2,16 +2,9 @@ api = 2
 
 core = 7.x
 
-projects[libraries] = 1
+projects[libraries] = 2
 
-; @TODO - Get these files from: https://github.com/mapbox/mapbox.js/tree/v0.6.7.
-
-libraries[mapboxjs_js][download][type] = "get"
-libraries[mapboxjs_js][download][url] = "http://api.tiles.mapbox.com/mapbox.js/v0.6.7/mapbox.js"
-libraries[mapboxjs_js][directory_name] = "mapboxjs"
-libraries[mapboxjs_js][destination] = "libraries"
-
-libraries[mapboxjs_css][download][type] = "get"
-libraries[mapboxjs_css][download][url] = "http://api.tiles.mapbox.com/mapbox.js/v0.6.7/mapbox.css"
-libraries[mapboxjs_css][directory_name] = "mapboxjs"
-libraries[mapboxjs_css][destination] = "libraries"
+libraries[mapboxjs][download][type] = "get"
+libraries[mapboxjs][download][url] = "https://github.com/mapbox/mapbox.js/archive/v0.6.7.tar.gz"
+libraries[mapboxjs][directory_name] = "mapboxjs"
+libraries[mapboxjs][destination] = "libraries"
