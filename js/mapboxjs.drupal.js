@@ -4,27 +4,21 @@
     attach:function (context, settings) {
 
       $(settings.mapboxjs).each(function () {
-
+        var mapObj = this;
         // @TODO - Support multiple MapBox maps on the same page.
 
-        // Load a settings object with all of our map settings.
-        var settings = {};
-        for (var setting in this.configuration) {
-          settings[setting] = this.configuration[setting];
-        }
-
         // Load a map with the right ID and optionally add some controls and variables.
-        var map = mapbox.map(this.mapID);
-        if (settings.zoomer == 1) {
+        var map = mapbox.map(mapObj.mapID);
+        if (mapObj.configuration.zoomer === 1) {
           map.ui.zoomer.add();
         }
-        if (settings.fullscreen == 1) {
+        if (mapObj.configuration.fullscreen === 1) {
           map.ui.fullscreen.add();
         }
-        if (settings.legend == 1) {
+        if (mapObj.configuration.legend === 1) {
           map.ui.legend.add();
         }
-        map.centerzoom({ lat:settings.lat, lon:settings.lon }, settings.zoom);
+        map.centerzoom({ lat:mapObj.configuration.center.lat, lon:mapObj.configuration.center.lon }, mapObj.configuration.zoom);
 
         // If the map base tileset switcher ui element is included, grab it for later.
         var switcher = document.getElementById('map-switcher');
@@ -35,8 +29,8 @@
         // Load our base tileset layer(s), then add any optional layers.
         // Mapbox.load() can accept a non-associative array of tileset layers.
         var base_tileset_urls = [];
-        for (var i in settings.base_tilesets) {
-          base_tileset_urls[i] = settings.base_tilesets[i]['url'];
+        for (var i in mapObj.layers) {
+          base_tileset_urls[i] = mapObj.layers[i]['url'];
         }
         mapbox.load(base_tileset_urls, function (data) {
           map.addLayer(data[0]['layer']);
@@ -52,7 +46,7 @@
               };
             }
           }
-          addOptionalLayers(); //FIXME - Working in Alpha1 release, but not here.
+//          addOptionalLayers(); //FIXME - Working in Alpha1 release, but not here.
         });
 
         // Helper function for adding our optional layers.

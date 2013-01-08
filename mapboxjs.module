@@ -161,28 +161,11 @@ function mapboxjs_render_preset(MapboxjsPreset $preset) {
   $map_id = 'map-' . $preset->name;
   // @TODO - Provide unique ID for each MapBox map so that we can act on multiple maps on a single page.
 
-  // Grab our required base tileset(s).
-  $base_tileset_items = field_get_items('mapboxjs_preset', $preset, 'field_base_tilesets');
-  $base_tilesets = array();
-  foreach ($base_tileset_items as $item) {
-    $base_tilesets[] = array('title' => $item['title'], 'url' => $item['url']);
-  }
-  // Grab our optional tilesets to be laid on top of base tileset(s).
-  $optional_tileset_items = field_get_items('mapboxjs_preset', $preset, 'field_optional_tilesets');
-  if (!empty($optional_tileset_items)) {
-    $optional_tilesets = array();
-    foreach ($optional_tileset_items as $item) {
-      $optional_tilesets[] = array(
-        'title' => $item['title'],
-        'url' => $item['url']
-      );
-    }
-  }
-
-  $settings = array('mapID' => $map_id);
-  foreach ($preset->settings as $key => $value) {
-    $settings['configuration'][$key] = $value;
-  }
+  $settings = array(
+    'mapID' => $map_id,
+    'layers' => $preset->layers,
+    'configuration' => $preset->settings
+  );
 
   // Pass our settings to Drupal's global js variable.
   drupal_add_js(array('mapboxjs' => $settings), 'setting');
@@ -190,11 +173,11 @@ function mapboxjs_render_preset(MapboxjsPreset $preset) {
   // Optionally, start adding extra controls.
   $extras = NULL;
   // Add a base tile switcher if we have more than one base tileset defined.
-  if (count($base_tilesets) > 1) {
+  if (count($preset->layers) > 1) {
     $switcher = '';
     // @TODO - Generate markup using renderable array.
-    foreach ($base_tilesets as $key => $tileset) {
-      $switcher .= "<li><a href='#' id='base-tile-" . $key . "'>" . $tileset['title'] . "</a></li>";
+    foreach ($preset->layers as $key => $layer) {
+      $switcher .= "<li><a href='#' id='base-tile-" . $key . "'>" . $layer['label'] . "</a></li>";
     }
     $switcher = "<div id='map-switcher'><ul>" . $switcher . "</ul></div>";
     $extras .= $switcher;
@@ -206,7 +189,6 @@ function mapboxjs_render_preset(MapboxjsPreset $preset) {
 
   return mapboxjs_render_map($map_id, $preset->settings['height'], $extras);
 }
-
 
 /**
  * Implements hook_theme().
