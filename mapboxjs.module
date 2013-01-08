@@ -108,8 +108,7 @@ function mapboxjs_get_presets($name = NULL) {
  * @return MapBox.js map as a renderable array
  */
 function mapboxjs_render_preset(MapboxjsPreset $preset) {
-  $map_id = 'map-' . $preset->name;
-  // @TODO - Provide unique ID for each MapBox map so that we can act on multiple maps on a single page.
+  $map_id = 'map-' . $preset->name . '-' . REQUEST_TIME;
 
   $settings = array(
     'mapID' => $map_id,
