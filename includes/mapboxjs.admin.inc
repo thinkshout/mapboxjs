@@ -235,7 +235,7 @@ function mapboxjs_preset_form_submit($form, &$form_state) {
   foreach ($values['settings'] as $key => $value) {
     $preset->settings[$key] = $value;
   }
-  $preset->layeres = $values['layers'];
+  $preset->layers = $values['layers'];
 
   $preset->save();
 
