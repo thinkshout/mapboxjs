@@ -5,7 +5,6 @@
 
       $(settings.mapboxjs).each(function () {
         var mapObj = this;
-        // @TODO - Support multiple MapBox maps on the same page.
 
         // Load a map with the right ID and optionally add some controls and variables.
         var map = mapbox.map(mapObj.mapID);
@@ -21,23 +20,23 @@
         map.centerzoom({ lat:mapObj.configuration.center.lat, lon:mapObj.configuration.center.lon }, mapObj.configuration.zoom);
 
         // If the map base tileset switcher ui element is included, grab it for later.
-        var switcher = document.getElementById('map-switcher');
+        var switcher = $('#map-switcher');
 
         // If the map tileset toggle ui element is included, grab it for later.
-        var options = document.getElementById('map-toggle');
+        var options = $('#map-toggle');
 
         // Load our base tileset layer(s), then add any optional layers.
         // Mapbox.load() can accept a non-associative array of tileset layers.
         var base_tileset_urls = [];
         for (var i in mapObj.layers) {
-          base_tileset_urls[i] = mapObj.layers[i]['url'];
+          base_tileset_urls[i] = mapObj.layers[i].url;
         }
         mapbox.load(base_tileset_urls, function (data) {
-          map.addLayer(data[0]['layer']);
+          map.addLayer(data[0].layer);
           for (var i in data) {
             // If there is more than one base tileset, add click events.
             if (data.length > 1) {
-              document.getElementById('base-tile-' + i).onclick = function (e) {
+              $('#base-tile-' + i).onclick = function (e) {
                 this.className = 'active';
                 //map.addLayer(data[e]['layer']);
                 // @FIXME - Not sure how to handle turning on/off multiple base tilesets.
