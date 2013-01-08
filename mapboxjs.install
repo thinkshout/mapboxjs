@@ -85,3 +85,29 @@ function mapboxjs_schema() {
   return $schema;
 }
 
+/**
+ * Implements hook_requirements().
+ */
+function mapboxjs_requirements($phase) {
+  $requirements = array();
+
+  // Ensure js library is available
+  if ($phase == 'runtime') {
+    $library = libraries_detect('mapboxjs');
+    $requirements['mapboxjs'] = array(
+      'title' => $t('MapBox.js'),
+    );
+
+    if ($library['installed']) {
+      $requirements['mapboxjs']['value'] = $library['version'];
+      $requirements['mapboxjs']['severity'] = REQUIREMENT_OK;
+    }
+    else {
+      $requirements['mapboxjs']['value'] = $library['error'];
+      $requirements['mapboxjs']['description'] = $library['error message'];
+      $requirements['mapboxjs']['severity'] = REQUIREMENT_ERROR;
+    }
+  }
+
+  return $requirements;
+}
