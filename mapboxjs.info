@@ -2,7 +2,7 @@ name = MapBox.JS
 description = Integration with the MapBox.js map scripting library.
 core = 7.x
 
-dependencies[] = libraries
+dependencies[] = libraries (>=2)
 
 files[] = includes/mapboxjs.entity.inc
 files[] = includes/mapboxjs.ui_controller.inc
