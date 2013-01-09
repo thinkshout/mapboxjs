@@ -120,7 +120,6 @@ function mapboxjs_preset_form($form, &$form_state, MapboxjsPreset $preset = NULL
   $form['layers_wrapper'] = array(
     '#title' => t('Map layers'),
     '#type' => 'fieldset',
-    '#description' => t(''),
     '#collapsible' => TRUE,
     '#description' => t('Please enter the full URL of a MapBox tileset to be added to this map. This URL should be in the TileJSON file format, like http://a.tiles.mapbox.com/v3/tmcw.map-hehqnmda.jsonp. The label is used in the map\'s layer switcher.'),
     '#attributes' => array('id' => 'mapboxjs-layer-wrapper')
@@ -131,7 +130,7 @@ function mapboxjs_preset_form($form, &$form_state, MapboxjsPreset $preset = NULL
     '#tree' => TRUE
   );
 
-  $layers = array(array('weight' => 0, 'url' => '', 'label' => ''));
+  $layers = array(array('weight' => 0, 'url' => '', 'label' => '', 'base' => 0, 'active' => 0));
   if (!empty($form_state['values']['layers'])) {
     $layers = $form_state['values']['layers'];
   }
@@ -140,7 +139,7 @@ function mapboxjs_preset_form($form, &$form_state, MapboxjsPreset $preset = NULL
   }
 
   if ((isset($form_state['triggering_element']) && $form_state['triggering_element']['#name'] == 'mapboxjs_add_layer')) {
-    $layers[] = array('weight' => 0, 'url' => '', 'label' => '');
+    $layers[] = array('weight' => 0, 'url' => '', 'label' => '', 'base' => 0, 'active' => 0);
   }
 
   foreach ($layers as $delta => $layer) {
@@ -152,6 +151,14 @@ function mapboxjs_preset_form($form, &$form_state, MapboxjsPreset $preset = NULL
       'url' => array(
         '#type' => 'textfield',
         '#default_value' => $layer['url'],
+      ),
+      'base' => array(
+        '#type' => 'checkbox',
+        '#default_value' => $layer['base'],
+      ),
+      'active' => array(
+        '#type' => 'checkbox',
+        '#default_value' => $layer['active'],
       ),
       'weight' => array(
         '#type' => 'weight',
@@ -180,6 +187,9 @@ function mapboxjs_preset_form($form, &$form_state, MapboxjsPreset $preset = NULL
   return $form;
 }
 
+/**
+ * AJAX callback for managing layers.
+ */
 function mapboxjs_preset_form_callback($form, $form_state) {
   return $form['layers_wrapper'];
 }
@@ -200,6 +210,9 @@ function mapboxjs_preset_form_validate($form, &$form_state) {
 
   // validate layer URLs
   foreach ($form_state['values']['layers'] as $key => $layer) {
+    if (empty($layer['url'])) {
+      unset($form_state['values']['layers'][$key]);
+    }
     if (!empty($layer['url']) && !valid_url($layer['url'], TRUE)) {
       form_set_error("layers][{$key}][url", t('Map layer URL is invalid.'));
     }
@@ -224,7 +237,14 @@ function mapboxjs_preset_form_submit($form, &$form_state) {
   foreach ($values['settings'] as $key => $value) {
     $preset->settings[$key] = $value;
   }
-  $preset->layers = $values['layers'];
+  $layers = $values['layers'];
+
+  // ensure our layers are sorted by weight
+  usort($layers, function($a, $b) {
+    return $a['weight'] > $b['weight'];
+  });
+
+  $preset->layers = $layers;
 
   $preset->save();
 
@@ -244,6 +264,8 @@ function theme_mapboxjs_preset_form_table($variables) {
   $header = array(
     t('Label'),
     t('Tile URL'),
+    t('Base layer'),
+    t('Active'),
     t('Weight')
   );
 
@@ -256,6 +278,8 @@ function theme_mapboxjs_preset_form_table($variables) {
       'data' => array(
         drupal_render($child['label']),
         drupal_render($child['url']),
+        drupal_render($child['base']),
+        drupal_render($child['active']),
         drupal_render($child['weight']),
       ),
       'class' => array('draggable'),
