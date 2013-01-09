@@ -1,17 +1,14 @@
-#map-switcher {
+#mapboxjs-switcher {
   position: absolute;
   top: 50px;
   left: 10px;
   z-index: 100;
-}
-
-#map-switcher ul {
   list-style: none;
   margin: 0;
   padding: 0;
 }
 
-#map-switcher a {
+#mapboxjs-switcher a {
   font-size: 13px;
   background: #FFF;
   color: #3C4E5A;
@@ -25,22 +22,22 @@
   text-decoration: none;
 }
 
-#map-switcher a:hover {
+#mapboxjs-switcher a:hover {
   background: #ECF5FA;
 }
 
-#map-switcher li:last-child a {
+#mapboxjs-switcher li:last-child a {
   border-bottom-width: 1px;
   -webkit-border-radius: 0 0 3px 3px;
   border-radius: 0 0 3px 3px;
 }
 
-#map-switcher li:first-child a {
+#mapboxjs-switcher li:first-child a {
   -webkit-border-radius: 3px 3px 0 0;
   border-radius: 3px 3px 0 0;
 }
 
-#map-switcher a.active {
+#mapboxjs-switcher a.mapboxjs-layer-active {
   background: #3887BE;
   border-color: #3887BE;
   color: #FFF;

@@ -19,72 +19,46 @@
         }
         map.centerzoom({ lat:mapObj.configuration.center.lat, lon:mapObj.configuration.center.lon }, mapObj.configuration.zoom);
 
-        // If the map base tileset switcher ui element is included, grab it for later.
-        var switcher = $('#map-switcher');
-
-        // If the map tileset toggle ui element is included, grab it for later.
-        var options = $('#map-toggle');
-
-        // Load our base tileset layer(s), then add any optional layers.
-        // Mapbox.load() can accept a non-associative array of tileset layers.
-        var base_tileset_urls = [];
+        var layers_to_load = [];
         for (var i in mapObj.layers) {
-          base_tileset_urls[i] = mapObj.layers[i].url;
-        }
-        mapbox.load(base_tileset_urls, function (data) {
-          map.addLayer(data[0].layer);
-          for (var i in data) {
-            // If there is more than one base tileset, add click events.
-            if (data.length > 1) {
-              $('#base-tile-' + i).onclick = function (e) {
-                this.className = 'active';
-                //map.addLayer(data[e]['layer']);
-                // @FIXME - Not sure how to handle turning on/off multiple base tilesets.
-                // See example at: http://mapbox.com/mapbox.js/example/simple-filtering/.
-                return false;
-              };
-            }
-          }
-//          addOptionalLayers(); //FIXME - Working in Alpha1 release, but not here.
-        });
-
-        // Helper function for adding our optional layers.
-        function addOptionalLayers() {
-          for (var i = 0; i < settings.optional_tilesets.length; i++) {
-            addIndividualOptionalLayer(i);
-          }
+          layers_to_load[i] = mapObj.layers[i].url;
         }
 
-        // Helper function for adding a single optional layer to map.
-        function addIndividualOptionalLayer(num) {
-          var composite = true;
-          if (settings.composite == '0') {
-            composite = false;
-          }
-          mapbox.layer().composite(composite).url(settings.optional_tilesets[num]['url'], function (layer) {
-            // If "toggleable layers enabled, show in a layer switcher."
-            // Based on tutorial at http://mapbox.com/mapbox.js/example/layers/
-            if (settings.layer_toggle == 1) {
+        mapbox.load(layers_to_load, function(data) {
+          if (mapObj.layers.length > 1) {
+            var switcher = document.createElement('ul');
+                switcher.id = 'mapboxjs-switcher';
+            for (var i = 0; i < data.length; i++) {
+              var o = data[i];
+//              if (i === 0) {
+//                o.layer.enable();
+//              }
+//              else {
+                o.layer.disable();
+//              }
+              map.addLayer(o.layer);
               var item = document.createElement('li');
-              var option = document.createElement('a');
-              option.href = '#';
-              option.id = layer.name;
-              option.className = 'active';
-              option.innerHTML = settings.optional_tilesets[num]['title'];
-              option.onclick = function (e) {
+              var layer = document.createElement('a');
+                  layer.href = '#';
+                  layer.id = o.layer.id();
+                  layer.innerHTML = mapObj.layers[i].label;
+
+              layer.onclick = function(e) {
                 e.preventDefault();
                 e.stopPropagation();
                 map.getLayer(this.id).enabled ? map.getLayer(this.id).disable() : map.getLayer(this.id).enable();
-                this.className = map.getLayer(this.id).enabled ? 'active' : '';
-                map.interaction.refresh();
-              };
-              item.appendChild(option);
-              options.appendChild(item);
+                $(this).toggleClass('mapboxjs-layer-active');
+              }
+              item.appendChild(layer);
+              switcher.appendChild(item);
             }
-            map.addLayer(layer);
-            map.interaction.auto();
-          });
-        }
+            document.getElementById(mapObj.mapID).appendChild(switcher);
+          }
+          else {
+            map.addLayer(data[0].layer);
+          }
+        });
+
       });
     }
   };

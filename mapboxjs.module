@@ -123,17 +123,13 @@ function mapboxjs_render_preset(MapboxjsPreset $preset) {
   $extras = NULL;
   // Add a base tile switcher if we have more than one base tileset defined.
   if (count($preset->layers) > 1) {
-    $switcher = '';
-    // @TODO - Generate markup using renderable array.
-    foreach ($preset->layers as $key => $layer) {
-      $switcher .= "<li><a href='#' id='base-tile-" . $key . "'>" . $layer['label'] . "</a></li>";
-    }
-    $switcher = "<div id='map-switcher'><ul>" . $switcher . "</ul></div>";
-    $extras .= $switcher;
-  }
-  // Add additional markup layer toggle controls option selected.
-  if ($preset->settings['layer_toggle'] == TRUE) {
-    $extras .= "<ul id='map-toggle'></ul>";
+//    $switcher = '';
+//    foreach ($preset->layers as $key => $layer) {
+//      $class = ($key ==  0) ? 'mapboxjs-layer-active' : 'mapboxjs-layer-inactive';
+//      $switcher .= "<li><a href='#' class ='mapboxjs-layer {$class}' id='mapboxjs-layer-{$key}'>{$layer['label']}</a></li>";
+//    }
+//    $switcher = "<ul id='map-switcher'></ul>";
+//    $extras .= $switcher;
   }
 
   return mapboxjs_render_map($map_id, $preset->settings['height'], $extras);
