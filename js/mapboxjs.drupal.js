@@ -30,12 +30,6 @@
                 switcher.id = 'mapboxjs-switcher';
             for (var i = 0; i < data.length; i++) {
               var o = data[i];
-//              if (i === 0) {
-//                o.layer.enable();
-//              }
-//              else {
-                o.layer.disable();
-//              }
               map.addLayer(o.layer);
               var item = document.createElement('li');
               var layer = document.createElement('a');
@@ -43,12 +37,21 @@
                   layer.id = o.layer.id();
                   layer.innerHTML = mapObj.layers[i].label;
 
+              if (mapObj.layers[i].active) {
+                o.layer.enable();
+                layer.className = 'mapboxjs-layer-active';
+              }
+              else {
+                o.layer.disable();
+              }
+
               layer.onclick = function(e) {
                 e.preventDefault();
                 e.stopPropagation();
                 map.getLayer(this.id).enabled ? map.getLayer(this.id).disable() : map.getLayer(this.id).enable();
                 $(this).toggleClass('mapboxjs-layer-active');
               }
+
               item.appendChild(layer);
               switcher.appendChild(item);
             }
