@@ -185,17 +185,6 @@ function mapboxjs_preset_form_callback($form, $form_state) {
 }
 
 /**
- * Helper function to validate base tileset URL.
- *
- * @TODO - Consider adding this validation to mapboxjs_preset_form_validate().
- */
-function mapboxjs_base_layer_validate($element, &$form_state, $form) {
-  if (!empty($element['#value']) && !(valid_url($element['#value'], TRUE))) {
-    form_error($element, t('Enter a valid URL or leave this field blank.'));
-  }
-}
-
-/**
  * Validation handler for mapboxjs_preset_form().
  */
 function mapboxjs_preset_form_validate($form, &$form_state) {
