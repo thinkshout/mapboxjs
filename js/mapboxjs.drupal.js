@@ -45,11 +45,16 @@
   Drupal.mapboxjs = {
 
     /**
+     * Load and enable map layers. Generally used as a callback for mapbox.load().
      *
      * @param data
+     *   Collection of laoded mapbox layers.
      * @param layers
+     *   Layers stored in a preset.
      * @param map
+     *   Fully loaded map object.
      * @param base
+     *   Book indicating if layers are base or optional.
      */
     load_layers: function (data, layers, map, base) {
       if (layers.length > 1 || !base) {

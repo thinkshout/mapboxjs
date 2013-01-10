@@ -49,13 +49,6 @@ function mapboxjs_preset_form($form, &$form_state, MapboxjsPreset $preset = NULL
     '#tree' => TRUE
   );
 
-  // Enable/disable layer toggle control for optional layers.
-  $form['settings']['layer_toggle'] = array(
-    '#type' => 'checkbox',
-    '#title' => t('Provide layer toggle controls for optional layers'),
-    '#description' => t('Select this option to present controls to toggle on/off the optional tileset layers provided above.'),
-    '#default_value' => isset($preset) ? $preset->settings['layer_toggle'] : FALSE,
-  );
   // Provide preset administrator with control over the map container height.
   $form['settings']['height'] = array(
     '#type' => 'textfield',
@@ -108,13 +101,6 @@ function mapboxjs_preset_form($form, &$form_state, MapboxjsPreset $preset = NULL
     '#type' => 'checkbox',
     '#title' => t('Provide a map legend, if included with MapBox tileset(s).'),
     '#default_value' => isset($preset) ? $preset->settings['legend'] : FALSE,
-  );
-  // Enable/disable tileset compositing.
-  $form['settings']['composite'] = array(
-    '#type' => 'checkbox',
-    '#title' => t('Enable tileset compositing'),
-    '#description' => t('By default, multiple tilesets will be returned by the MapBox API as a single, composited tileset. This improves performance and reduces the number of tile requests to the MapBox API. In certain cases, however, it is helpful to disable compositing for smoother transitions when toggling on/off one or more tilesets.'),
-    '#default_value' => isset($preset) ? $preset->settings['composite'] : TRUE,
   );
 
   $form['base_layers_wrapper'] = array(
