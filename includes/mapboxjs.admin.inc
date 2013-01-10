@@ -302,7 +302,7 @@ function mapboxjs_preset_form_submit($form, &$form_state) {
   });
 
   foreach ($base_layers as $key => $base_layer) {
-    $base_layers[$key]['active'] = ($values['active']) && ($key === (int) $values['active']);
+    $base_layers[$key]['active'] = ($key === (int) $values['active']);
   }
 
   $preset->layers = array(
