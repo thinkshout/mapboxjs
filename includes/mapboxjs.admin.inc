@@ -117,6 +117,65 @@ function mapboxjs_preset_form($form, &$form_state, MapboxjsPreset $preset = NULL
     '#default_value' => isset($preset) ? $preset->settings['composite'] : TRUE,
   );
 
+  $form['base_layers_wrapper'] = array(
+    '#title' => t('Base layers'),
+    '#type' => 'fieldset',
+    '#collapsible' => TRUE,
+    '#description' => t('Please enter the full URL of a MapBox tileset to be added to this map. This URL should be in the TileJSON file format, like http://a.tiles.mapbox.com/v3/tmcw.map-hehqnmda.jsonp. The label is used in the map\'s layer switcher.'),
+    '#attributes' => array('id' => 'mapboxjs-base-layer-wrapper')
+  );
+
+  $form['base_layers_wrapper']['base_layers'] = array(
+    '#theme' => 'mapboxjs_preset_form_table',
+    '#tree' => TRUE
+  );
+
+  $layers = array(array('weight' => 0, 'url' => '', 'label' => '', 'active' => 0));
+  if (!empty($form_state['values']['base_layers'])) {
+    $layers = $form_state['values']['base_layers'];
+  }
+  else if (!empty($preset->layers['base'])) {
+    $layers = $preset->layers['base'];
+  }
+
+  if ((isset($form_state['triggering_element']) && $form_state['triggering_element']['#name'] == 'mapboxjs_add_base_layer')) {
+    $layers[] = array('weight' => 0, 'url' => '', 'label' => '', 'active' => 0);
+  }
+
+  foreach ($layers as $delta => $layer) {
+    $form['base_layers_wrapper']['base_layers'][$delta] = array(
+      'label' => array(
+        '#type' => 'textfield',
+        '#default_value' => $layer['label'],
+      ),
+      'url' => array(
+        '#type' => 'textfield',
+        '#default_value' => $layer['url'],
+      ),
+      'active' => array(
+        '#type' => 'radio',
+        '#return_value' => $delta,
+        '#default_value' => ($layer['active']) ? $delta : FALSE,
+        '#name' => 'active',
+        '#tree' => FALSE
+      ),
+      'weight' => array(
+        '#type' => 'weight',
+        '#delta' => 30,
+        '#default_value' => $layer['weight'],
+      )
+    );
+  }
+  $form['mapboxjs_add_base_layer'] = array(
+    '#value' => t('Add base layer'),
+    '#type' => 'button',
+    '#ajax' => array(
+      'callback' => 'mapboxjs_preset_form_callback',
+      'wrapper' => 'mapboxjs-base-layer-wrapper'
+    ),
+    '#name' => 'mapboxjs_add_base_layer',
+  );
+
   $form['layers_wrapper'] = array(
     '#title' => t('Map layers'),
     '#type' => 'fieldset',
@@ -135,7 +194,7 @@ function mapboxjs_preset_form($form, &$form_state, MapboxjsPreset $preset = NULL
     $layers = $form_state['values']['layers'];
   }
   else if (!empty($preset->layers)) {
-    $layers = $preset->layers;
+    $layers = $preset->layers['optional'];
   }
 
   if ((isset($form_state['triggering_element']) && $form_state['triggering_element']['#name'] == 'mapboxjs_add_layer')) {
@@ -151,10 +210,6 @@ function mapboxjs_preset_form($form, &$form_state, MapboxjsPreset $preset = NULL
       'url' => array(
         '#type' => 'textfield',
         '#default_value' => $layer['url'],
-      ),
-      'base' => array(
-        '#type' => 'checkbox',
-        '#default_value' => $layer['base'],
       ),
       'active' => array(
         '#type' => 'checkbox',
@@ -177,7 +232,6 @@ function mapboxjs_preset_form($form, &$form_state, MapboxjsPreset $preset = NULL
     '#name' => 'mapboxjs_add_layer',
   );
 
-
   $form['actions'] = array('#type' => 'actions');
   $form['actions']['submit'] = array(
     '#value' => t('Save preset'),
@@ -191,7 +245,12 @@ function mapboxjs_preset_form($form, &$form_state, MapboxjsPreset $preset = NULL
  * AJAX callback for managing layers.
  */
 function mapboxjs_preset_form_callback($form, $form_state) {
-  return $form['layers_wrapper'];
+  if ($form_state['triggering_element']['#name'] == 'mapboxjs_add_layer') {
+    return $form['layers_wrapper'];
+  }
+  else if($form_state['triggering_element']['#name'] == 'mapboxjs_add_base_layer') {
+    return $form['base_layers_wrapper'];
+  }
 }
 
 /**
@@ -217,6 +276,14 @@ function mapboxjs_preset_form_validate($form, &$form_state) {
       form_set_error("layers][{$key}][url", t('Map layer URL is invalid.'));
     }
   }
+  foreach ($form_state['values']['base_layers'] as $key => $layer) {
+    if (empty($layer['url'])) {
+      unset($form_state['values']['base_layers'][$key]);
+    }
+    if (!empty($layer['url']) && !valid_url($layer['url'], TRUE)) {
+      form_set_error("base_layers][{$key}][url", t('Map layer URL is invalid.'));
+    }
+  }
 }
 
 /**
@@ -238,13 +305,24 @@ function mapboxjs_preset_form_submit($form, &$form_state) {
     $preset->settings[$key] = $value;
   }
   $layers = $values['layers'];
+  $base_layers = $values['base_layers'];
 
   // ensure our layers are sorted by weight
   usort($layers, function($a, $b) {
     return $a['weight'] > $b['weight'];
   });
+  usort($base_layers, function($a, $b) {
+    return $a['weight'] > $b['weight'];
+  });
 
-  $preset->layers = $layers;
+  foreach ($base_layers as $key => $base_layer) {
+    $base_layers[$key]['active'] = ($values['active']) && ($key === (int) $values['active']);
+  }
+
+  $preset->layers = array(
+    'base' => $base_layers,
+    'optional' => $layers
+  );
 
   $preset->save();
 
@@ -264,7 +342,6 @@ function theme_mapboxjs_preset_form_table($variables) {
   $header = array(
     t('Label'),
     t('Tile URL'),
-    t('Base layer'),
     t('Active'),
     t('Weight')
   );
@@ -278,7 +355,6 @@ function theme_mapboxjs_preset_form_table($variables) {
       'data' => array(
         drupal_render($child['label']),
         drupal_render($child['url']),
-        drupal_render($child['base']),
         drupal_render($child['active']),
         drupal_render($child['weight']),
       ),

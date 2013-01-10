@@ -19,51 +19,96 @@
         }
         map.centerzoom({ lat:mapObj.configuration.center.lat, lon:mapObj.configuration.center.lon }, mapObj.configuration.zoom);
 
-        var layers_to_load = [];
-        for (var i in mapObj.layers) {
-          layers_to_load[i] = mapObj.layers[i].url;
+        var base_layers = [];
+        for (var i in mapObj.layers.base) {
+          base_layers[i] = mapObj.layers.base[i].url;
         }
 
-        mapbox.load(layers_to_load, function(data) {
-          if (mapObj.layers.length > 1) {
-            var switcher = document.createElement('ul');
-                switcher.id = 'mapboxjs-switcher';
-            for (var i = 0; i < data.length; i++) {
-              var o = data[i];
-              map.addLayer(o.layer);
-              var item = document.createElement('li');
-              var layer = document.createElement('a');
-                  layer.href = '#';
-                  layer.id = o.layer.id();
-                  layer.innerHTML = mapObj.layers[i].label;
+        mapbox.load(base_layers, function(data) {
+          Drupal.mapboxjs.load_layers(data, mapObj.layers.base, map, true);
 
-              if (mapObj.layers[i].active) {
-                o.layer.enable();
-                layer.className = 'mapboxjs-layer-active';
-              }
-              else {
-                o.layer.disable();
-              }
-
-              layer.onclick = function(e) {
-                e.preventDefault();
-                e.stopPropagation();
-                map.getLayer(this.id).enabled ? map.getLayer(this.id).disable() : map.getLayer(this.id).enable();
-                $(this).toggleClass('mapboxjs-layer-active');
-              }
-
-              item.appendChild(layer);
-              switcher.appendChild(item);
-            }
-            document.getElementById(mapObj.mapID).appendChild(switcher);
+          // Add optional layers. Need to ensure this is done after base layers load.
+          var optional_layers = [];
+          for (var i in mapObj.layers.optional) {
+            optional_layers[i] = mapObj.layers.optional[i].url;
           }
-          else {
-            map.addLayer(data[0].layer);
-          }
+
+          mapbox.load(optional_layers, function(data) {
+            Drupal.mapboxjs.load_layers(data, mapObj.layers.optional, map, false);
+          });
+
         });
-
       });
     }
   };
 
+  Drupal.mapboxjs = {
+
+    /**
+     *
+     * @param data
+     * @param layers
+     * @param map
+     * @param base
+     */
+    load_layers: function (data, layers, map, base) {
+      if (layers.length > 1 || !base) {
+        var switcher = document.createElement('ul');
+            switcher.id = 'mapboxjs-switcher-' + (base ? 'base' : 'optional');
+            switcher.className = 'mapboxjs-switcher';
+        for (var i = 0; i < data.length; i++) {
+          var o = data[i];
+          map.addLayer(o.layer);
+          var item = document.createElement('li');
+          var layer = document.createElement('a');
+              layer.href = '#';
+              layer.id = o.layer.id();
+              layer.className = 'mapboxjs-switcher-link';
+              layer.innerHTML = layers[i].label;
+
+          if (layers[i].active) {
+            o.layer.enable();
+            $(layer).addClass('mapboxjs-layer-active');
+          }
+          else {
+            o.layer.disable();
+          }
+
+          layer.onclick = function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            var link = this;
+            if (base) {
+              $('#mapboxjs-switcher-base a', $('#' + map.parent.id)).each(function(){
+                if (link.id === this.id) {
+                  map.getLayer(this.id).enable();
+                  $(this).addClass('mapboxjs-layer-active');
+                }
+                else{
+                  map.getLayer(this.id).disable();
+                  $(this).removeClass('mapboxjs-layer-active');
+                }
+              });
+            }
+            else {
+              map.getLayer(this.id).enabled ? map.getLayer(this.id).disable() : map.getLayer(this.id).enable();
+              $(this).toggleClass('mapboxjs-layer-active');
+              map.interaction.refresh();
+            }
+          };
+
+          item.appendChild(layer);
+          switcher.appendChild(item);
+        }
+        document.getElementById(map.parent.id).appendChild(switcher);
+      }
+      else {
+        map.addLayer(data[0].layer);
+      }
+      map.interaction.auto();
+    }
+
+  };
+
 })(jQuery);
+
