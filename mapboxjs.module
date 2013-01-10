@@ -119,20 +119,7 @@ function mapboxjs_render_preset(MapboxjsPreset $preset) {
   // Pass our settings to Drupal's global js variable.
   drupal_add_js(array('mapboxjs' => $settings), 'setting');
 
-  // Optionally, start adding extra controls.
-  $extras = NULL;
-  // Add a base tile switcher if we have more than one base tileset defined.
-  if (count($preset->layers) > 1) {
-//    $switcher = '';
-//    foreach ($preset->layers as $key => $layer) {
-//      $class = ($key ==  0) ? 'mapboxjs-layer-active' : 'mapboxjs-layer-inactive';
-//      $switcher .= "<li><a href='#' class ='mapboxjs-layer {$class}' id='mapboxjs-layer-{$key}'>{$layer['label']}</a></li>";
-//    }
-//    $switcher = "<ul id='map-switcher'></ul>";
-//    $extras .= $switcher;
-  }
-
-  return mapboxjs_render_map($map_id, $preset->settings['height'], $extras);
+  return mapboxjs_render_map($map_id, $preset->settings['height'], NULL);
 }
 
 /**
