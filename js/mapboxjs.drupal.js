@@ -39,7 +39,9 @@
 
         });
 
-        map.interaction.auto();
+        if (mapObj.configuration.interactive === 1) {
+          map.interaction.auto();
+        }
 
       });
     }
@@ -114,6 +116,8 @@
       else {
         map.addLayer(data[0].layer);
       }
+      
+      map.refresh();
     }
 
   };

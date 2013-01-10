@@ -102,6 +102,12 @@ function mapboxjs_preset_form($form, &$form_state, MapboxjsPreset $preset = NULL
     '#title' => t('Provide a map legend, if included with MapBox tileset(s).'),
     '#default_value' => isset($preset) ? $preset->settings['legend'] : FALSE,
   );
+  // Enable interactive data
+  $form['settings']['interactive'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Enable default settings - animated tooltips - for interaction with the map.'),
+    '#default_value' => isset($preset) ? $preset->settings['interactive'] : FALSE,
+  );
 
   $form['base_layers_wrapper'] = array(
     '#title' => t('Base layers'),
