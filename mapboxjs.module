@@ -18,6 +18,12 @@ function mapboxjs_libraries_info() {
       'js' => array('dist/dev/mapbox.js'),
       'css' => array('dist/dev/mapbox.css'),
     ),
+    'integration files' => array(
+      'mapboxjs' => array(
+        'js' => array('js/mapboxjs.drupal.js'),
+        'css' => array('css/mapboxjs.drupal.css'),
+      ),
+    ),
   );
 
   return $libraries;
@@ -154,9 +160,6 @@ function mapboxjs_theme($existing, $type, $theme, $path) {
  */
 function mapboxjs_render_map($map_id = 'mapboxjs-map', $height = 400, $extras = NULL) {
   libraries_load('mapboxjs');
-  $path = drupal_get_path('module', 'mapboxjs');
-  drupal_add_js($path . '/js/mapboxjs.drupal.js');
-  drupal_add_css($path . '/css/mapboxjs.drupal.css');
   return theme('mapboxjs_map', array(
     'map_id' => $map_id,
     'height' => $height,
