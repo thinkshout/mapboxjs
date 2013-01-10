@@ -38,6 +38,9 @@
           });
 
         });
+
+        map.interaction.auto();
+
       });
     }
   };
@@ -98,8 +101,9 @@
             else {
               map.getLayer(this.id).enabled ? map.getLayer(this.id).disable() : map.getLayer(this.id).enable();
               $(this).toggleClass('mapboxjs-layer-active');
-              map.interaction.refresh();
             }
+
+            map.refresh();
           };
 
           item.appendChild(layer);
@@ -110,7 +114,6 @@
       else {
         map.addLayer(data[0].layer);
       }
-      map.interaction.auto();
     }
 
   };
