@@ -105,7 +105,7 @@ function mapboxjs_preset_form($form, &$form_state, MapboxjsPreset $preset = NULL
   // Enable interactive data
   $form['settings']['interactive'] = array(
     '#type' => 'checkbox',
-    '#title' => t('Enable default settings - animated tooltips - for interaction with the map.'),
+    '#title' => t('Enable default interactive settings - animated tooltips - for interaction with the map.'),
     '#default_value' => isset($preset) ? $preset->settings['interactive'] : FALSE,
   );
 
