@@ -39,7 +39,6 @@ function mapboxjs_field_field_is_empty($item, $field) {
   return FALSE;
 }
 
-
 /**
  * Implements hook_field_widget_info().
  */
@@ -97,11 +96,15 @@ function mapboxjs_field_field_formatter_info() {
 function mapboxjs_field_field_formatter_view($entity_type, $entity, $field, $instance, $langcode, $items, $display) {
 
   $element = array();
-  // Iterate through field values and load mapboxjs map presets.
-  foreach ($items as $delta => $item) {
-    $preset = mapboxjs_get_presets($item['value']);
-    if ($preset != FALSE) {
-      $element[$delta] = mapboxjs_render_preset($preset);
+  if ($display['type'] == 'mapboxjs_preset_default') {
+    // Iterate through field values and load mapboxjs map presets.
+    foreach ($items as $delta => $item) {
+      if (!empty($item['value'])) {
+        $preset = mapboxjs_get_presets($item['value']);
+        if ($preset != FALSE) {
+          $element[$delta] = array('#markup' => mapboxjs_render_preset($preset));
+        }
+      }
     }
   }
 
