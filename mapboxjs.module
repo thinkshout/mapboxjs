@@ -101,7 +101,7 @@ function mapboxjs_entity_info() {
  * @param string $name
  *   If set, the type with the given name is returned.
  */
-function mapboxjs_get_presets($name = NULL) {
+function mapboxjs_load_presets($name = NULL) {
   $presets = entity_load_multiple_by_name('mapboxjs_preset', isset($name) ? array($name) : FALSE);
   return isset($name) ? reset($presets) : $presets;
 }

@@ -5,7 +5,7 @@
  */
 function mapboxjs_block_block_info() {
   // Get all of our MapBox.js map preset objects.
-  $presets = mapboxjs_get_presets();
+  $presets = mapboxjs_load_presets();
   $blocks = array();
   foreach ($presets as $preset) {
     $blocks[$preset->name] = array(
@@ -22,7 +22,7 @@ function mapboxjs_block_block_info() {
 function mapboxjs_block_block_view($delta = '') {
   $block = array();
 
-  $preset = mapboxjs_get_presets($delta);
+  $preset = mapboxjs_load_presets($delta);
   $block['subject'] = $preset->label;
   $block['content'] = mapboxjs_render_preset($preset);
 
