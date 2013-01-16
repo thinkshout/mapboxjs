@@ -33,7 +33,10 @@ function mapboxjs_field_field_instance_settings_form($field, $instance) {
  * Implements hook_field_is_empty().
  */
 function mapboxjs_field_field_is_empty($item, $field) {
-
+  if (empty($item['value']) && (string) $item['value'] !== '0') {
+    return TRUE;
+  }
+  return FALSE;
 }
 
 
