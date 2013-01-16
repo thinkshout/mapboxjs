@@ -9,47 +9,58 @@
 
         // Note the closure needed here to ensure the right "map" is passed.
         !function (mapObj, map) {
-
-          if (mapObj.configuration.zoomer === 1) {
-            map.ui.zoomer.add();
-          }
-          if (mapObj.configuration.fullscreen === 1) {
-            map.ui.fullscreen.add();
-          }
-          if (mapObj.configuration.legend === 1) {
-            map.ui.legend.add();
-          }
-          map.centerzoom({ lat:mapObj.configuration.center.lat, lon:mapObj.configuration.center.lon }, mapObj.configuration.zoom);
-
-          var base_layers = [];
-          for (var i in mapObj.layers.base) {
-            base_layers[i] = mapObj.layers.base[i].url;
-          }
-
-          mapbox.load(base_layers, function(data) {
-            Drupal.mapboxjs.load_layers(data, mapObj.layers.base, map, true);
-
-            // Add optional layers. Need to ensure this is done after base layers load.
-            var optional_layers = [];
-            for (var i in mapObj.layers.optional) {
-              optional_layers[i] = mapObj.layers.optional[i].url;
-            }
-
-            mapbox.load(optional_layers, function(data) {
-              Drupal.mapboxjs.load_layers(data, mapObj.layers.optional, map, false);
-            });
-
-          });
-
-          if (mapObj.configuration.interactive === 1) {
-            map.interaction.auto();
-          }
+          Drupal.mapboxjs.render_map(mapObj, map);
         }(mapObj, map);
       }
     }
   };
 
   Drupal.mapboxjs = {
+
+    /**
+     * Render a mapboxjs map.
+     *
+     * @param mapObj
+     *   Map configuration object.
+     * @param map
+     *   MapBoxJS map object
+     */
+    render_map: function(mapObj, map) {
+      if (mapObj.configuration.zoomer === 1) {
+        map.ui.zoomer.add();
+      }
+      if (mapObj.configuration.fullscreen === 1) {
+        map.ui.fullscreen.add();
+      }
+      if (mapObj.configuration.legend === 1) {
+        map.ui.legend.add();
+      }
+      map.centerzoom({ lat:mapObj.configuration.center.lat, lon:mapObj.configuration.center.lon }, mapObj.configuration.zoom);
+
+      var base_layers = [];
+      for (var i in mapObj.layers.base) {
+        base_layers[i] = mapObj.layers.base[i].url;
+      }
+
+      mapbox.load(base_layers, function(data) {
+        Drupal.mapboxjs.load_layers(data, mapObj.layers.base, map, true);
+
+        // Add optional layers. Need to ensure this is done after base layers load.
+        var optional_layers = [];
+        for (var i in mapObj.layers.optional) {
+          optional_layers[i] = mapObj.layers.optional[i].url;
+        }
+
+        mapbox.load(optional_layers, function(data) {
+          Drupal.mapboxjs.load_layers(data, mapObj.layers.optional, map, false);
+        });
+
+      });
+
+      if (mapObj.configuration.interactive === 1) {
+        map.interaction.auto();
+      }
+    },
 
     /**
      * Load and enable map layers. Generally used as a callback for mapbox.load().
