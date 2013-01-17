@@ -53,9 +53,15 @@
           optional_layers[i] = mapObj.layers.optional[i].url;
         }
 
-        mapbox.load(optional_layers, function(data) {
-          Drupal.mapboxjs.load_layers(data, mapObj.layers.optional, map, false);
-        });
+        if (optional_layers.length > 0) {
+          mapbox.load(optional_layers, function(data) {
+            Drupal.mapboxjs.load_layers(data, mapObj.layers.optional, map, false);
+            map.refresh();
+          });
+        }
+        else {
+          map.refresh();
+        }
 
       });
 
@@ -130,8 +136,6 @@
       else {
         map.addLayer(data[0].layer);
       }
-
-      map.refresh();
     }
   };
 
