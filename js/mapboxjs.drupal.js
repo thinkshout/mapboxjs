@@ -11,6 +11,8 @@
         !function (mapObj, map) {
           Drupal.mapboxjs.render_map(mapObj, map);
         }(mapObj, map);
+
+        settings.mapboxjs[mapid].map = map;
       }
     }
   };
