@@ -114,7 +114,13 @@ function mapboxjs_load_presets($name = NULL) {
  * @return MapBox.js map as a renderable array
  */
 function mapboxjs_render_preset(MapboxjsPreset $preset) {
-  return mapboxjs_render_map($preset->layers, $preset->settings, $preset->settings['height'], NULL);
+  return mapboxjs_render_map(
+    $preset->layers,
+    $preset->settings,
+    $preset->settings['height'],
+    NULL,
+    array('class' => array($preset->name, 'mapboxjs-map'))
+  );
 }
 
 /**
@@ -124,8 +130,6 @@ function mapboxjs_theme($existing, $type, $theme, $path) {
   return array(
     'mapboxjs_map' => array(
       'arguments' => array(
-        'map_id' => NULL,
-        'height' => 400,
         'extras' => ''
       ),
       'template' => 'mapboxjs_map',
@@ -147,7 +151,7 @@ function mapboxjs_theme($existing, $type, $theme, $path) {
  *
  * @return string map markup
  */
-function mapboxjs_render_map($layers, $settings, $height = 400, $extras = NULL) {
+function mapboxjs_render_map($layers, $settings, $height = 400, $extras = NULL, $attributes = array()) {
   libraries_load('mapboxjs');
 
   $map_id = drupal_html_id('mapboxjs_map');
@@ -162,9 +166,15 @@ function mapboxjs_render_map($layers, $settings, $height = 400, $extras = NULL) 
   // Pass our settings to Drupal's global js variable.
   drupal_add_js(array('mapboxjs' => $settings), 'setting');
 
+  // Merge default attributes
+  $attributes = array_merge(array(
+    'id' => $map_id,
+    'style' => "height: {$height}px",
+    'class' => array('mapboxjs-map')
+  ), $attributes);
+
   return theme('mapboxjs_map', array(
-    'map_id' => $map_id,
-    'height' => $height,
+    'attributes_array' => $attributes,
     'extras' => $extras,
   ));
 }
