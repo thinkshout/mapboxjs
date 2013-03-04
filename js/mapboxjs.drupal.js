@@ -128,6 +128,12 @@
             map.refresh();
           };
 
+          // Ensure double click events don't conflict with map zooming.
+          layer.ondblclick = function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+          }
+
           item.appendChild(layer);
           switcher.appendChild(item);
         }
