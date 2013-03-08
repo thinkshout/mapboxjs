@@ -88,7 +88,14 @@
             switcher.className = 'mapboxjs-switcher mapboxjs-switcher-' + (base ? 'base' : 'optional');
         for (var i = 0; i < data.length; i++) {
           var o = data[i];
-          map.addLayer(o.layer);
+
+          if (base) {
+            map.addTileLayer(o.layer);
+          }
+          else {
+            map.addLayer(o.layer);
+          }
+
           var item = document.createElement('li');
           var layer = document.createElement('a');
               layer.href = '#';
