@@ -99,7 +99,7 @@
           var item = document.createElement('li');
           var layer = document.createElement('a');
               layer.href = '#';
-              layer.layer_id = o.layer.id();
+              layer.id = o.layer.id();
               layer.className = 'mapboxjs-switcher-link';
               layer.innerHTML = layers[i].label;
 
@@ -117,18 +117,18 @@
             var link = this;
             if (base) {
               $('a', $(switcher)).each(function(){
-                if (link.layer_id === this.layer_id) {
-                  map.getLayer(this.layer_id).enable();
+                if (link.id === this.id) {
+                  map.getLayer(this.id).enable();
                   $(this).addClass('mapboxjs-layer-active');
                 }
                 else{
-                  map.getLayer(this.layer_id).disable();
+                  map.getLayer(this.id).disable();
                   $(this).removeClass('mapboxjs-layer-active');
                 }
               });
             }
             else {
-              map.getLayer(this.layer_id).enabled ? map.getLayer(this.layer_id).disable() : map.getLayer(this.layer_id).enable();
+              map.getLayer(this.id).enabled ? map.getLayer(this.id).disable() : map.getLayer(this.id).enable();
               $(this).toggleClass('mapboxjs-layer-active');
             }
 
