@@ -2,7 +2,6 @@
 
   Drupal.behaviors.mapboxjs = {
     attach:function (context, settings) {
-
       for (var mapid in settings.mapboxjs) {
         var mapObj = settings.mapboxjs[mapid];
         var map = mapbox.map(mapid);
@@ -41,31 +40,24 @@
       }
       map.centerzoom({ lat:mapObj.configuration.center.lat, lon:mapObj.configuration.center.lon }, mapObj.configuration.zoom);
 
-      var base_layers = [];
-      for (var i in mapObj.layers.base) {
-        base_layers[i] = mapObj.layers.base[i].url;
+      for (var layer_group in mapObj.layers) {
+        var layers = mapObj.layers[layer_group];
+
+        var layer_urls = [];
+        for (var i in mapObj.layers[layer_group]) {
+          layer_urls[i] = mapObj.layers[layer_group][i].url;
+        }
+
+        !function(layers, layer_group){
+          mapbox.load(layer_urls, function(data) {
+            // This is a hack to determine if layers should be
+            // inclusive / exclusive. Condition based on if the layer name
+            // contains the word 'base'.
+            var base = (layer_group.indexOf('base') > -1);
+            Drupal.mapboxjs.load_layers(data, layers, map, base, layer_group);
+          })
+        }(layers, layer_group)
       }
-
-      mapbox.load(base_layers, function(data) {
-        Drupal.mapboxjs.load_layers(data, mapObj.layers.base, map, true);
-
-        // Add optional layers. Need to ensure this is done after base layers load.
-        var optional_layers = [];
-        for (var i in mapObj.layers.optional) {
-          optional_layers[i] = mapObj.layers.optional[i].url;
-        }
-
-        if (optional_layers.length > 0) {
-          mapbox.load(optional_layers, function(data) {
-            Drupal.mapboxjs.load_layers(data, mapObj.layers.optional, map, false);
-            map.refresh();
-          });
-        }
-        else {
-          map.refresh();
-        }
-
-      });
 
       if (mapObj.configuration.interactive === 1) {
         map.interaction.auto();
@@ -83,20 +75,18 @@
      *   Fully loaded map object.
      * @param base
      *   Book indicating if layers are base or optional.
+     * @param switcher_id
+     *   Use to give each switcher a unique ID.
      */
-    load_layers: function (data, layers, map, base) {
+    load_layers: function (data, layers, map, base, switcher_id) {
       if (layers.length > 1 || !base) {
         var switcher = document.createElement('ul');
-            switcher.className = 'mapboxjs-switcher mapboxjs-switcher-' + (base ? 'base' : 'optional');
+        switcher.className = 'mapboxjs-switcher mapboxjs-switcher-' + (base ? 'base' : 'optional');
+        switcher.id = 'mapboxjs-switcher-' + switcher_id;
         for (var i = 0; i < data.length; i++) {
           var o = data[i];
 
-          if (base) {
-            map.addTileLayer(o.layer);
-          }
-          else {
-            map.addLayer(o.layer);
-          }
+          map.insertLayerAt(i, o.layer);
 
           var item = document.createElement('li');
           var layer = document.createElement('a');
