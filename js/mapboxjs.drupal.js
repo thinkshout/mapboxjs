@@ -10,6 +10,8 @@
         // Note the closure needed here to ensure the right "map" is passed.
         !function (mapObj, map) {
           Drupal.mapboxjs.render_map(mapObj, map);
+          // Allow other modules to alter the map.
+          $(document).trigger('mapBoxJs.alterMap', [map]);
         }(mapObj, map);
 
         settings.mapboxjs[mapid].map = map;
