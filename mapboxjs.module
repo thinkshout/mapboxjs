@@ -143,12 +143,13 @@ function mapboxjs_theme($existing, $type, $theme, $path) {
 /**
  * Load all MapBox.js required client files and return markup for a map.
  *
- * @param string $map_id
- * @param string $height
- * @param string $extras
- *    Contains additional markup or controls embedded in the map element.
+ * @param $layers
+ * @param $settings
+ * @param int $height
+ * @param null $extras
+ * @param array $attributes
  *
- * @return string map markup
+ * @return string
  */
 function mapboxjs_render_map($layers, $settings, $height = 400, $extras = NULL, $attributes = array()) {
   libraries_load('mapboxjs');
