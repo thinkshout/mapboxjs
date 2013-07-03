@@ -109,7 +109,9 @@
             map_layer.disable();
           }
 
-          layer.onclick = function(e) {
+          // Note we need both click and touchstart events to ensure mobile
+          // compatibility.
+          $(layer).bind('click touchstart', function(e) {
             e.preventDefault();
             e.stopPropagation();
             var link = this;
@@ -131,7 +133,7 @@
             }
 
             map.refresh();
-          };
+          });
 
           // Ensure double click events don't conflict with map zooming.
           layer.ondblclick = function(e) {
@@ -151,4 +153,3 @@
   };
 
 })(jQuery);
-
