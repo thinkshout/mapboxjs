@@ -147,7 +147,7 @@
         document.getElementById(map.parent.id).appendChild(switcher);
       }
       else {
-        map.addLayer(data[0].layer);
+        map.addLayer(layer_group[0].layer);
       }
     }
   };
