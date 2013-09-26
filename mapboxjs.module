@@ -9,14 +9,14 @@ function mapboxjs_libraries_info() {
     'vendor url' => 'http://mapbox.com/mapbox.js',
     'download url' => 'https://github.com/mapbox/mapbox.js',
     'version arguments' => array(
-      'file' => 'CHANGELOG',
-      // ### v0.6.7
-      'pattern' => '/### v((\d+)\.(\d+)\.(\d+))/',
+      'file' => 'CHANGELOG.md',
+      // ### v1.3.1
+      'pattern' => '/## v((\d+)\.(\d+)\.(\d+))/',
       'lines' => 1,
     ),
     'files' => array(
-      'js' => array('dist/dev/mapbox.js'),
-      'css' => array('dist/dev/mapbox.css'),
+      'js' => array('dist/mapbox.js'),
+      'css' => array('dist/mapbox.css'),
     ),
     'integration files' => array(
       'mapboxjs' => array(
