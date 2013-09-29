@@ -90,11 +90,23 @@ function mapboxjs_preset_form($form, &$form_state, MapboxjsPreset $preset = NULL
     '#title' => t('Provide zoom controls'),
     '#default_value' => isset($preset) ? $preset->settings['zoomer'] : TRUE,
   );
-  // Enable/disable fullscreen control.
-  $form['settings']['fullscreen'] = array(
+  // Enable/disable scrollWheelZoom.
+  $form['settings']['scrollWheelZoom'] = array(
     '#type' => 'checkbox',
-    '#title' => t('Provide fullscreen map option'),
-    '#default_value' => isset($preset) ? $preset->settings['fullscreen'] : FALSE,
+    '#title' => t('Scroll wheel zoom'),
+    '#default_value' => isset($preset) ? $preset->settings['scrollWheelZoom'] : TRUE,
+  );
+  // Enable/disable doubleClickZoom.
+  $form['settings']['doubleClickZoom'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Double click zoom.'),
+    '#default_value' => isset($preset) ? $preset->settings['doubleClickZoom'] : TRUE,
+  );
+  // Enable/disable dragging.
+  $form['settings']['dragging'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Dragging'),
+    '#default_value' => isset($preset) ? $preset->settings['dragging'] : TRUE,
   );
   // Enable/disable map legend.
   $form['settings']['legend'] = array(
