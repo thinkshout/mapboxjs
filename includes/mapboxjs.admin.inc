@@ -108,6 +108,12 @@ function mapboxjs_preset_form($form, &$form_state, MapboxjsPreset $preset = NULL
     '#title' => t('Dragging'),
     '#default_value' => isset($preset) ? $preset->settings['dragging'] : TRUE,
   );
+  // Enable/disable map layer switcher.
+  $form['settings']['layer_switcher'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Provide a layer switcher control.'),
+    '#default_value' => isset($preset) ? $preset->settings['layer_switcher'] : FALSE,
+  );
   // Enable/disable map legend.
   $form['settings']['legend'] = array(
     '#type' => 'checkbox',

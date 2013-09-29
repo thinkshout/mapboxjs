@@ -23,8 +23,6 @@
           settings['dragging'] = false;
         }
 
-        // @TODO more leaflet settings.
-
         var map = L.mapbox.map(mapid, null, settings);
 
         // Note the closure needed here to ensure the right "map" is passed.
@@ -93,9 +91,11 @@
 
       for (var type in layers) {
         for (var i in mapObj.layers[type]) {
-  
+
           var tile_layer = L.mapbox.tileLayer(mapObj.layers[type][i]['url']);
-  
+
+          // If interactive get the gridLayer and add both tile and grid layers
+          // to a layerGroup so they are added/removed together.
           if (interactive) {
             var gridLayer = L.mapbox.gridLayer(mapObj.layers[type][i]['url']);
             layer = L.layerGroup([tile_layer, gridLayer]);
@@ -116,15 +116,18 @@
                 }
               });
             }
-  
+            // Layer is active, add it to the map immediately.
             layer.addTo(map);
           }
-  
+
           layers[type][mapObj.layers[type][i]['label']] = layer;
         }
       }
 
-      L.control.layers(layers['base'], layers['optional']).addTo(map);
+      // Enable the leaflet layer switcher.
+      if (mapObj.configuration.layer_switcher === 1) {
+        L.control.layers(layers['base'], layers['optional']).addTo(map);
+      }
 
     }
 
