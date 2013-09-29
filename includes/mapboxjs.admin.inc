@@ -113,7 +113,7 @@ function mapboxjs_preset_form($form, &$form_state, MapboxjsPreset $preset = NULL
     '#title' => t('Base layers'),
     '#type' => 'fieldset',
     '#collapsible' => TRUE,
-    '#description' => t('Please enter the full URL of a MapBox tileset to be added to this map. This URL should be in the TileJSON file format, like http://a.tiles.mapbox.com/v3/tmcw.map-hehqnmda.jsonp. The label is used in the map\'s layer switcher.'),
+    '#description' => t('Please enter the full URL of a MapBox tileset to be added to this map. This URL should be in the TileJSON file format, like http://a.tiles.mapbox.com/v3/tmcw.map-hehqnmda.jsonp. It can also use the mapbox shorthand of tmcw.map-hehqnmda or composite maps such as tmcw.map-hehqnmda,tmcw.map-ensalsnw. The label is used in the map\'s layer switcher.'),
     '#attributes' => array('id' => 'mapboxjs-base-layer-wrapper')
   );
 
@@ -172,10 +172,10 @@ function mapboxjs_preset_form($form, &$form_state, MapboxjsPreset $preset = NULL
     '#title' => t('Map layers'),
     '#type' => 'fieldset',
     '#collapsible' => TRUE,
-    '#description' => t('Please enter the full URL of a MapBox tileset to be added to this map. This URL should be in the TileJSON file format, like http://a.tiles.mapbox.com/v3/tmcw.map-hehqnmda.jsonp. The label is used in the map\'s layer switcher.'),
+    '#description' => t('Please enter the full URL of a MapBox tileset to be added to this map. This URL should be in the TileJSON file format, like http://a.tiles.mapbox.com/v3/tmcw.map-hehqnmda.jsonp. It can also use the mapbox shorthand of tmcw.map-hehqnmda or composite maps such as tmcw.map-hehqnmda,tmcw.map-ensalsnw. The label is used in the map\'s layer switcher.'),
     '#attributes' => array('id' => 'mapboxjs-layer-wrapper')
   );
-  
+
   $form['layers_wrapper']['layers'] = array(
     '#theme' => 'mapboxjs_preset_form_table',
     '#tree' => TRUE
@@ -264,16 +264,10 @@ function mapboxjs_preset_form_validate($form, &$form_state) {
     if (empty($layer['url'])) {
       unset($form_state['values']['layers'][$key]);
     }
-    if (!empty($layer['url']) && !valid_url($layer['url'], TRUE)) {
-      form_set_error("layers][{$key}][url", t('Map layer URL is invalid.'));
-    }
   }
   foreach ($form_state['values']['base_layers'] as $key => $layer) {
     if (empty($layer['url'])) {
       unset($form_state['values']['base_layers'][$key]);
-    }
-    if (!empty($layer['url']) && !valid_url($layer['url'], TRUE)) {
-      form_set_error("base_layers][{$key}][url", t('Map layer URL is invalid.'));
     }
   }
 }
