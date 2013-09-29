@@ -60,7 +60,7 @@
         map.addControl(L.mapbox.legendControl());
         legend = true;
 
-        // Set triggers to add/remove legend contents and gridlayers based on active layer.
+        // Set triggers to add/remove legend contents as layers are added/removed.
         map.on('layeradd', function(e) {
           if (e.layer.getTileJSON) {
             var tileJSON = e.layer.getTileJSON();
@@ -86,63 +86,45 @@
 
       map.setView({ lat:mapObj.configuration.center.lat, lon:mapObj.configuration.center.lon }, mapObj.configuration.zoom);
 
-      var base_layers = {};
-      for (var i in mapObj.layers['base']) {
+      var layers = {
+        'base': [], 
+        'optional': []
+      };
 
-        var tile_layer = L.mapbox.tileLayer(mapObj.layers['base'][i]['url']);
-
-        if (interactive) {
-          var gridLayer = L.mapbox.gridLayer(mapObj.layers['base'][i]['url']);
-          layer = L.layerGroup([tile_layer, gridLayer]);
-          map.addControl(L.mapbox.gridControl(gridLayer));
-        }
-        else {
-          layer = tile_layer;
-        }
-
-        if (mapObj.layers['base'][i]['active'] === true) {
-          if (legend) {
-            // Async loading, so when ready check if we need to load the legend.
-            tile_layer.on('ready', function() {
-              // get TileJSON data from the loaded layer
-              var tileJSON = this.getTileJSON();
-              if (tileJSON && tileJSON.legend) {
-                map.legendControl.addLegend(tileJSON.legend);
-              }
-            });
+      for (var type in layers) {
+        for (var i in mapObj.layers[type]) {
+  
+          var tile_layer = L.mapbox.tileLayer(mapObj.layers[type][i]['url']);
+  
+          if (interactive) {
+            var gridLayer = L.mapbox.gridLayer(mapObj.layers[type][i]['url']);
+            layer = L.layerGroup([tile_layer, gridLayer]);
+            map.addControl(L.mapbox.gridControl(gridLayer));
           }
-
-          layer.addTo(map);
-        }
-
-        base_layers[mapObj.layers['base'][i]['label']] = layer;
-      }
-
-      var optional_layers = {};
-      for (var i in mapObj.layers['optional']) {
-        var layer = L.mapbox.tileLayer(mapObj.layers['optional'][i]['url']);
-
-        if (mapObj.layers['optional'][i]['active'] === 1) {
-          // Async loading, so when ready check if we need to load the legend.
-          // Somehow doesn't trigger layeradd event.
-          layer.on('ready', function() {
-            // get TileJSON data from the loaded layer
-            var tileJSON = this.getTileJSON();
-            if (tileJSON && tileJSON.legend) {
-              map.legendControl.addLegend(tileJSON.legend);
+          else {
+            layer = tile_layer;
+          }
+  
+          if (mapObj.layers[type][i]['active'] == true) {
+            if (legend) {
+              // Async loading, so when ready check if we need to load the legend.
+              tile_layer.on('ready', function() {
+                // get TileJSON data from the loaded layer
+                var tileJSON = this.getTileJSON();
+                if (tileJSON && tileJSON.legend) {
+                  map.legendControl.addLegend(tileJSON.legend);
+                }
+              });
             }
-          });
-          map.addLayer(layer);
-
-          var gridLayer = L.mapbox.gridLayer(mapObj.layers['optional'][i]['url']);
-
-          map.addLayer(gridLayer);
-          map.addControl(L.mapbox.gridControl(gridLayer));
+  
+            layer.addTo(map);
+          }
+  
+          layers[type][mapObj.layers[type][i]['label']] = layer;
         }
-        optional_layers[mapObj.layers['optional'][i]['label']] = layer;
       }
 
-      L.control.layers(base_layers, optional_layers).addTo(map);
+      L.control.layers(layers['base'], layers['optional']).addTo(map);
 
     }
 
