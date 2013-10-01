@@ -99,7 +99,8 @@
           if (interactive) {
             var gridLayer = L.mapbox.gridLayer(mapObj.layers[type][i]['url']);
             layer = L.layerGroup([tile_layer, gridLayer]);
-            map.addControl(L.mapbox.gridControl(gridLayer));
+            // Specifying follow to reduce conflicts with other controls.
+            map.addControl(L.mapbox.gridControl(gridLayer, {'follow': true}));
           }
           else {
             layer = tile_layer;
