@@ -21,7 +21,6 @@ function mapboxjs_libraries_info() {
     'integration files' => array(
       'mapboxjs' => array(
         'js' => array('js/mapboxjs.drupal.js'),
-        'css' => array('css/mapboxjs.drupal.css'),
       ),
     ),
   );
