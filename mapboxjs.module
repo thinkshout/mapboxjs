@@ -10,7 +10,7 @@ function mapboxjs_libraries_info() {
     'download url' => 'https://github.com/mapbox/mapbox.js',
     'version arguments' => array(
       'file' => 'CHANGELOG.md',
-      // ### v1.3.1
+      // ## v1.3.1
       'pattern' => '/## v((\d+)\.(\d+)\.(\d+))/',
       'lines' => 1,
     ),
