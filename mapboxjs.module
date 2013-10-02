@@ -23,6 +23,9 @@ function mapboxjs_libraries_info() {
         'js' => array('js/mapboxjs.drupal.js'),
       ),
     ),
+    'callbacks' => array(
+      'post-load' => array('mapboxjs_load_conditional_css'),
+    )
   );
 
   return $libraries;
@@ -176,4 +179,12 @@ function mapboxjs_render_map($layers, $settings, $height = 400, $extras = NULL, 
     'attributes_array' => $attributes,
     'extras' => $extras,
   ));
+}
+
+/**
+ * Post-load callback to load the IE 8 conditional CSS.
+ */
+function mapboxjs_load_conditional_css($library, $version, $variant) {
+  // Load IE conditional CSS.
+  drupal_add_css($library['library path'] . '/dist/mapbox.ie.css', array('browsers' => array( 'IE' => 'lte IE 8')));
 }
